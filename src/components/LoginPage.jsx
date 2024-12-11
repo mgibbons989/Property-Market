@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useUser } from "./UserContext";
+import "../homepage.css";
 
 import Header from "./Header";
 import Footer from "./Footer";

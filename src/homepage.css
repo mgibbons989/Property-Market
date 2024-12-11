@@ -7,14 +7,20 @@
     --text-color: black;
 }
 
-
+#root {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+}
 
 body {
     font-family: 'Poppins', sans-serif;
-    background-image: url("./images/houses.jpg");
+    /* background-image: url("./images/houses.jpg");
     background-size: cover;
     background-repeat: no-repeat;
-    background-attachment: fixed;
+    background-attachment: fixed; */
 
     color: var(--text-color);
 
@@ -108,6 +114,11 @@ header nav button {
     align-items: center;
     gap: 50px;
     padding: 40px 15px;
+
+    background-image: url("./images/houses.jpg");
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 .center {
