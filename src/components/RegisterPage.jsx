@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
 
+import Header from "./Header";
+import Footer from "./Footer";
+
 function Register() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -40,7 +43,8 @@ function Register() {
   };
 
   return (
-    <div>
+    <>
+      <Header />
       <h2>Register</h2>
       <form onSubmit={handleRegister}>
         {error && <p style={{ color: "red" }}>{error}</p>}
@@ -106,7 +110,8 @@ function Register() {
       <p>
         Already have an account? <Link to="/">Login here</Link>
       </p>
-    </div>
+      <Footer />
+    </>
   );
 }
 

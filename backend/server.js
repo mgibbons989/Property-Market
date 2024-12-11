@@ -57,23 +57,27 @@ app.get("/", (req, res) => {
   // }
 });
 
-app.post("/login", async (req, res) => {
-  
+app.post("/", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return res.status(400).json({ message: "Email and password are required." });
+    return res
+      .status(400)
+      .json({ message: "Email and password are required." });
   }
 
   try {
-    const [rows] = await pool.query("SELECT * FROM Users WHERE email = ?", [email]);
+    const [rows] = await pool.query("SELECT * FROM Users WHERE email = ?", [
+      email,
+    ]);
 
     if (rows.length === 0) {
       console.log("User not found.");
-      
+
       return res.status(404).json({ message: "User not found." });
     }
 
+    // The matching user object from database
     const user = rows[0];
 
     const isMatch = await bcrypt.compare(password, user.password);
@@ -83,7 +87,14 @@ app.post("/login", async (req, res) => {
 
     // Simulate generating a JWT token
     const token = "fake-jwt-token";
-    return res.status(200).json({ message: "Login successful", token });
+    const { id, first_name, last_name, type } = user;
+    return res
+      .status(200)
+      .json({
+        message: "Login successful",
+        token,
+        user: { id, first_name, last_name, type },
+      });
   } catch (error) {
     console.error("Error during login:", error.message);
     return res.status(500).json({ message: "Internal server error." });
@@ -92,10 +103,9 @@ app.post("/login", async (req, res) => {
 
 app.post("/register", async (req, res) => {
   console.log("Attempting to register...");
-  
+
   const { email, password, firstName, lastName, type } = req.body;
   console.log(email, password, firstName, lastName, type);
-  
 
   // Validate inputs
   if (!email || !password || !firstName || !lastName || !type) {
@@ -108,7 +118,10 @@ app.post("/register", async (req, res) => {
 
   try {
     // Check if the user already exists
-    const [existingUser] = await pool.query("SELECT * FROM Users WHERE email = ?", [email]);
+    const [existingUser] = await pool.query(
+      "SELECT * FROM Users WHERE email = ?",
+      [email]
+    );
     if (existingUser.length > 0) {
       return res.status(400).json({ message: "User already exists." });
     }
@@ -123,7 +136,7 @@ app.post("/register", async (req, res) => {
     );
 
     console.log("Registered successfully.");
-    
+
     res.status(201).json({ message: "User registered successfully." });
   } catch (error) {
     console.error("Error during registration:", error.message);
