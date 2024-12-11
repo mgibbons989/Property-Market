@@ -2,19 +2,25 @@ import "./App.css";
 // import { BrowserRouter as Router, Routes, Route, createBrowserRouter } from "react-router-dom";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Header from "./components/Header";
-import Login from "./components/Login";
-import Register from "./components/Register";
+import LoginPage from "./components/LoginPage";
+import RegisterPage from "./components/RegisterPage";
+import DashboardPage from "./components/DashboardPage";
 import Footer from "./components/Footer";
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <Login />,
+    element: <LoginPage />,
     errorElement: <div>404 Not Found</div>
   },
   {
     path: '/register',
-    element: <Register />,
+    element: <RegisterPage />,
+    errorElement: <div>404 Not Found</div>
+  },
+  {
+    path: '/dashboard',
+    element: <DashboardPage />,
     errorElement: <div>404 Not Found</div>
   }
 ]);
@@ -22,20 +28,9 @@ const router = createBrowserRouter([
 function App() {
   return (
     <>
-      <Header />
+      {/* <Header /> */}
         <RouterProvider router={router} />
-      <Footer />
-      {/* <Router>
-        <div>
-          <Header />
-          <Routes>
-            <Route path="/" element={<Login />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/Register" element={<Register />} />
-          </Routes>
-          <Footer />
-        </div>
-      </Router> */}
+      {/* <Footer /> */}
     </>
   );
 }

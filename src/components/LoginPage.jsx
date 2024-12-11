@@ -1,10 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
-import { Link, useNaviate } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+
+import Header from "./Header";
+import Footer from "./Footer";
 
 // const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:3306";
 // console.log(API_BASE_URL);
-
 
 function Login() {
   const [email, setEmail] = useState("");
@@ -12,21 +14,29 @@ function Login() {
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  const user = localStorage.getItem("user");
+  if (user) {
+    return <Navigate to="/dashboard" replace />;
+  }
+
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:3306/login", {
+      const response = await axios.post("http://localhost:3306/", {
         email,
         password,
       });
-      console.log(response.status);
 
       if (response.status === 200) {
         alert("Login successful!");
+        const { token, user } = response.data;
+        console.log(user);
+
+        localStorage.setItem("user", JSON.stringify(user));
         // Navigate to correct dashboard (sellger, buyer, admin)
-        // navigate("/dashboard");
+        navigate("/dashboard");
       } else {
         alert("Incorrect");
       }
@@ -46,6 +56,7 @@ function Login() {
 
   return (
     <>
+      <Header />
       <h2>Login</h2>
       <form onSubmit={handleLogin}>
         <div>
@@ -73,8 +84,9 @@ function Login() {
         <button type="submit">Login</button>
       </form>
       <p>
-        Don't have an account? <Link to='/register'>Register here</Link>
+        Don't have an account? <Link to="/register">Register here</Link>
       </p>
+      <Footer />
     </>
   );
 }
