@@ -25,7 +25,7 @@ const pool = mysql
   })
   .promise();
 
-  // Configure multer for file uploads
+// Configure multer for file uploads
 import path from "path";
 
 const storage = multer.diskStorage({
@@ -86,8 +86,24 @@ const createPropertiesTable = async () => {
   }
 };
 
+const createAdminUser = async () => {
+  const hashedPassword = await bcrypt.hash("1234", 10);
+  try {
+    const createAdminQuery = `
+      INSERT INTO Users (first_name, last_name, email, password, type)
+      VALUES (?, ?, ?, ?, ?);
+    `;
+    const values = ["admin", "admin", "a@gmail.com", hashedPassword, "admin"];
+    await pool.query(createAdminQuery, values);
+    console.log("Admin was created or already exists.");
+  } catch (error) {
+    console.error("Error creating Admin:", error.message);
+  }
+};
+
 createUsersTable();
 createPropertiesTable();
+createAdminUser();
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
@@ -131,13 +147,11 @@ app.post("/", async (req, res) => {
     // Simulate generating a JWT token
     const token = "fake-jwt-token";
     const { id, first_name, last_name, type } = user;
-    return res
-      .status(200)
-      .json({
-        message: "Login successful",
-        token,
-        userData: { id, first_name, last_name, type },
-      });
+    return res.status(200).json({
+      message: "Login successful",
+      token,
+      userData: { id, first_name, last_name, type },
+    });
   } catch (error) {
     console.error("Error during login:", error.message);
     return res.status(500).json({ message: "Internal server error." });
@@ -230,7 +244,9 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
     res.status(201).json({ message: "Property added successfully", photoPath });
   } catch (error) {
     console.error("Error saving property:", error.essage);
-    res.status(500).json({ message: "Error saving property", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error saving property", error: error.message });
   }
 });
 
@@ -246,12 +262,66 @@ app.get("/api/properties/:userId", async (req, res) => {
     const [rows] = await pool.query(query, [userId]);
 
     if (rows.length === 0) {
-      return res.status(404).json({ message: "No properties found for this user." });
+      return res
+        .status(404)
+        .json({ message: "No properties found for this user." });
     }
 
     res.status(200).json(rows); // Return the list of properties
   } catch (error) {
     console.error("Error fetching properties:", error.message);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// EDIT API
+app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
+  const { id } = req.params;
+  const {
+    location,
+    age,
+    floor_plan,
+    bedrooms,
+    additional_facilities,
+    garden,
+    parking,
+    proximity_facilities,
+    proximity_main_roads,
+    tax_records,
+  } = req.body;
+
+  const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
+
+  try {
+    const query = `
+      UPDATE properties 
+      SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, additional_facilities = ?, garden = ?, parking = ?, proximity_facilities = ?, proximity_main_roads = ?, tax_records = ?, photo_url = ?
+      WHERE id = ?;
+    `;
+    const values = [
+      location,
+      age,
+      floor_plan,
+      bedrooms,
+      additional_facilities,
+      garden,
+      parking,
+      proximity_facilities,
+      proximity_main_roads,
+      tax_records,
+      photoPath,
+      id,
+    ];
+
+    const [result] = await pool.query(query, values);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Property not found." });
+    }
+
+    res.status(200).json({ message: "Property updated successfully." });
+  } catch (error) {
+    console.error("Error updating property:", error.message);
     res.status(500).json({ message: "Internal server error." });
   }
 });

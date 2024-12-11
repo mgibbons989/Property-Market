@@ -6,8 +6,24 @@ import Footer from "./Footer";
 import Modal from "./Modal";
 import axios from "axios";
 
+import BuyerDashboardPage from "./BuyerDashboardPage";
+import AdminDashboardPage from "./AdminDashboardPage";
+
 function DashboardPage() {
   const { user } = useUser();
+
+  if (!user) {
+    return <Navigate to="/" replace />;
+  }
+
+  if (user.type === "buyer") {
+    return <BuyerDashboardPage />;
+  }
+
+  if (user.type === "admin") {
+    return <AdminDashboardPage />;
+  }
+
   const [cards, setCards] = useState([]); // State to hold cards
   const [isModalOpen, setIsModalOpen] = useState(false); // State to toggle modal
   const [newCardData, setNewCardData] = useState({
@@ -23,6 +39,7 @@ function DashboardPage() {
     tax_records: "",
     photo: null, // Initial value for the file input
   });
+  const [editingCard, setEditingCard] = useState(null); // For editing
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -48,46 +65,83 @@ function DashboardPage() {
     }
   }, [user]);
 
-  const handleAddCard = async () => {
+  const handleSave = async () => {
     const formData = new FormData();
-    formData.append("user_id", user.id); // Add user ID
+    formData.append("user_id", user.id);
     formData.append("location", newCardData.location);
     formData.append("age", newCardData.age);
     formData.append("floor_plan", newCardData.floor_plan);
-    formData.append("bedrooms", parseInt(newCardData.bedrooms, 10) || 1);
-    formData.append("additional_facilities", newCardData.additional_facilities);
+    formData.append("bedrooms", parseInt(newCardData.bedrooms, 10) || 0);
+    formData.append(
+      "additional_facilities",
+      newCardData.additional_facilities || ""
+    );
     formData.append("garden", newCardData.garden ? 1 : 0);
     formData.append("parking", newCardData.parking ? 1 : 0);
     formData.append(
       "proximity_facilities",
-      parseInt(newCardData.proximity_facilities, 10) || 1
+      parseInt(newCardData.proximity_facilities, 10) || 0
     );
     formData.append(
       "proximity_main_roads",
-      parseInt(newCardData.proximity_main_roads, 10) || 1
+      parseInt(newCardData.proximity_main_roads, 10) || 0
     );
-    formData.append("tax_records", newCardData.tax_records);
-    formData.append("photo", newCardData.photo); // Add the photo file
+    formData.append("tax_records", parseFloat(newCardData.tax_records) || 0.0);
+    if (newCardData.photo) {
+      formData.append("photo", newCardData.photo);
+    }
 
     try {
-      const response = await axios.post(
-        "http://localhost:3306/api/properties",
-        formData,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data", // Inform server of the form data
-          },
+      if (editingCard) {
+        // Edit mode: Update existing property
+        const response = await axios.put(
+          `http://localhost:3306/api/properties/${editingCard.id}`,
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.status === 200) {
+          // Update the card in the UI
+          setCards(
+            cards.map((card) =>
+              card.id === editingCard.id ? { ...card, ...newCardData } : card
+            )
+          );
+          setEditingCard(null); // Clear editing state
         }
-      );
-
-      if (response.status === 201) {
-        const result = response.data;
-        console.log("Property saved:", result);
-        setCards([...cards, newCardData.location]); // Add location as a new card
-        setIsModalOpen(false); // Close modal
       } else {
-        console.error("Error saving property:", response.statusText);
+        // Add mode: Add a new property
+        const response = await axios.post(
+          "http://localhost:3306/api/properties",
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        if (response.status === 201) {
+          setCards([...cards, { ...newCardData, id: response.data.id }]); // Add new card to UI
+        }
       }
+
+      setNewCardData({
+        location: "",
+        age: "",
+        floor_plan: "",
+        bedrooms: "",
+        additional_facilities: "",
+        garden: false,
+        parking: false,
+        proximity_facilities: "",
+        proximity_main_roads: "",
+        tax_records: "",
+        photo: null,
+      });
+      setIsModalOpen(false); // Close modal
     } catch (error) {
       console.error(
         "Error saving property:",
@@ -96,23 +150,31 @@ function DashboardPage() {
     }
   };
 
+  const handleEdit = (cardId) => {
+    const cardToEdit = cards.find((card) => card.id === cardId); // Find the card to edit
+    setEditingCard(cardToEdit); // Set the card being edited
+    setNewCardData({ ...cardToEdit }); // Prefill modal fields
+    setIsModalOpen(true); // Open the modal
+  };
+
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this property?")) {
       try {
-        const response = await axios.delete(`http://localhost:3306/api/properties/${id}`);
+        const response = await axios.delete(
+          `http://localhost:3306/api/properties/${id}`
+        );
         if (response.status === 200) {
           console.log("Property deleted successfully");
           setCards(cards.filter((card) => card.id !== id)); // Remove the card from the UI
         }
       } catch (error) {
-        console.error("Error deleting property:", error.response?.data || error.message);
+        console.error(
+          "Error deleting property:",
+          error.response?.data || error.message
+        );
       }
     }
   };
-
-  if (!user) {
-    return <Navigate to="/" replace />;
-  }
 
   console.log(`Current user: ${user}`);
 
@@ -388,7 +450,9 @@ function DashboardPage() {
                 </div>
               </div>
             </div>
-            <button onClick={handleAddCard}>Save</button>
+            <button onClick={handleSave}>
+              {editingCard ? "Save Changes" : "Add Property"}
+            </button>
             <button onClick={toggleModal}>Cancel</button>
           </Modal>
         )}

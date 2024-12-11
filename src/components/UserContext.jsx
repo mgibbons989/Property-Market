@@ -9,6 +9,8 @@ export const UserProvider = ({ children }) => {
     return storedUser ? JSON.parse(storedUser) : null;
   });
 
+  const [cards, setCards] = useState([]);
+
   // Update the user state and sync with localStorage
   const updateUser = (newUser) => {
     setUser(newUser);
@@ -16,11 +18,12 @@ export const UserProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(newUser)); // Save user to localStorage
     } else {
       localStorage.removeItem("user"); // Remove user from localStorage
+      setCards([]);
     }
   };
 
   return (
-    <UserContext.Provider value={{ user, setUser: updateUser }}>
+    <UserContext.Provider value={{ user, setUser: updateUser, cards, setCards }}>
       {children}
     </UserContext.Provider>
   );

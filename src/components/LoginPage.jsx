@@ -18,7 +18,7 @@ function Login() {
 
   // const user = localStorage.getItem("user");
   console.log(user);
-  
+
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -40,8 +40,19 @@ function Login() {
 
         setUser(userData);
         // localStorage.setItem("user", JSON.stringify(user));
-        // Navigate to correct dashboard (seller, buyer, admin)
-        navigate("/dashboard");
+        if (userData.type === "seller") {
+          const propertiesResponse = await axios.get(
+            `http://localhost:3306/api/properties?user_id=${userData.id}`
+          );
+
+          setCards(propertiesResponse.data);
+          // Navigate to correct dashboard (seller, buyer, admin)
+          navigate("/dashboard");
+        } else if (userData.type === "buyer") {
+          navigate("/buyer-dashboard");
+        } else if (userData.type === "admin") {
+          navigate("/admin-dashboard");
+        }
       }
     } catch (err) {
       if (err.response) {
