@@ -32,7 +32,7 @@ function DashboardPage() {
     const fetchProperties = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3306/api/properties/${user.id}`
+          `http://localhost:5000/api/properties/${user.id}`
         );
         setCards(response.data); // Update state with the fetched properties
       } catch (error) {
@@ -71,7 +71,7 @@ function DashboardPage() {
 
     try {
       const response = await axios.post(
-        "http://localhost:3306/api/properties",
+        "http://localhost:5000/api/properties",
         formData,
         {
           headers: {
@@ -99,7 +99,7 @@ function DashboardPage() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this property?")) {
       try {
-        const response = await axios.delete(`http://localhost:3306/api/properties/${id}`);
+        const response = await axios.delete(`http://localhost:5000/api/properties/${id}`);
         if (response.status === 200) {
           console.log("Property deleted successfully");
           setCards(cards.filter((card) => card.id !== id)); // Remove the card from the UI

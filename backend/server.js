@@ -14,7 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Load env
-dotenv.config();
+dotenv.config({ path: "./backend/.env" });
 
 const pool = mysql
   .createPool({
@@ -25,7 +25,7 @@ const pool = mysql
   })
   .promise();
 
-  // Configure multer for file uploads
+// Configure multer for file uploads
 import path from "path";
 
 const storage = multer.diskStorage({
@@ -280,7 +280,7 @@ app.delete("/api/properties/:id", async (req, res) => {
 // Serve static files (e.g., uploaded photos)
 app.use("/uploads", express.static("uploads"));
 
-const PORT = process.env.SQL_PORT || 3306;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });

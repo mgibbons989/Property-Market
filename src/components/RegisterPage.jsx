@@ -19,7 +19,7 @@ function Register() {
     setError(""); // Clear previous errors
 
     try {
-      const response = await axios.post("http://localhost:3306/register", {
+      const response = await axios.post("http://localhost:5000/register", {
         firstName,
         lastName,
         email,
