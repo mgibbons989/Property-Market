@@ -1,6 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNaviate } from "react-router-dom";
 
 // const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:3306";
 // console.log(API_BASE_URL);
@@ -25,7 +25,7 @@ function Login() {
 
       if (response.status === 200) {
         alert("Login successful!");
-        // Navigate to the dashboard or homepage after successful login
+        // Navigate to correct dashboard (sellger, buyer, admin)
         // navigate("/dashboard");
       } else {
         alert("Incorrect");
@@ -73,7 +73,7 @@ function Login() {
         <button type="submit">Login</button>
       </form>
       <p>
-        Don't have an account? <a href="/register">Register here</a>
+        Don't have an account? <Link to='/register'>Register here</Link>
       </p>
     </>
   );
