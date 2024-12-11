@@ -1,5 +1,6 @@
 import express from "express";
 import mysql from "mysql2";
+import multer from "multer";
 import cors from "cors";
 import dotenv from "dotenv";
 import bodyParser from "body-parser";
@@ -24,6 +25,20 @@ const pool = mysql
   })
   .promise();
 
+  // Configure multer for file uploads
+import path from "path";
+
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, "uploads/"); // Directory to save the uploaded files
+  },
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname)); // Unique filename with original extension
+  },
+});
+
+const upload = multer({ storage });
+
 const createUsersTable = async () => {
   try {
     const createTableQuery = `
@@ -44,7 +59,35 @@ const createUsersTable = async () => {
   }
 };
 
+const createPropertiesTable = async () => {
+  try {
+    const createPropertiesQuery = `
+      CREATE TABLE IF NOT EXISTS Properties (
+        id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT NOT NULL,
+        location VARCHAR(255),
+        age VARCHAR(10),
+        floor_plan VARCHAR(255),
+        bedrooms INT,
+        additional_facilities VARCHAR(255),
+        garden BOOLEAN DEFAULT FALSE,
+        parking BOOLEAN DEFAULT FALSE,
+        proximity_facilities INT,
+        proximity_main_roads INT,
+        tax_records DECIMAL(10, 2),
+        photo_url VARCHAR(255),
+        FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+      );
+    `;
+    await pool.query(createPropertiesQuery);
+    console.log("Properties table created or already exists.");
+  } catch (error) {
+    console.error("Error creating Properties table:", error.message);
+  }
+};
+
 createUsersTable();
+createPropertiesTable();
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
@@ -143,6 +186,99 @@ app.post("/register", async (req, res) => {
     res.status(500).json({ message: "Internal server error." });
   }
 });
+
+// Endpoint to save property with photo
+app.post("/api/properties", upload.single("photo"), async (req, res) => {
+  const {
+    user_id, // From the current user context
+    location,
+    age,
+    floor_plan,
+    bedrooms,
+    additional_facilities,
+    garden,
+    parking,
+    proximity_facilities,
+    proximity_main_roads,
+    tax_records,
+  } = req.body;
+
+  const photoPath = req.file ? `/uploads/${req.file.filename}` : null; // Save file path if uploaded
+
+  try {
+    const query = `
+      INSERT INTO properties 
+      (user_id, location, age, floor_plan, bedrooms, additional_facilities, garden, parking, proximity_facilities, proximity_main_roads, tax_records, photo_url)
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+    `;
+    const values = [
+      user_id,
+      location,
+      age,
+      floor_plan,
+      bedrooms,
+      additional_facilities,
+      garden,
+      parking,
+      proximity_facilities,
+      proximity_main_roads,
+      tax_records,
+      photoPath,
+    ];
+
+    await pool.query(query, values);
+    res.status(201).json({ message: "Property added successfully", photoPath });
+  } catch (error) {
+    console.error("Error saving property:", error.essage);
+    res.status(500).json({ message: "Error saving property", error: error.message });
+  }
+});
+
+app.get("/api/properties/:userId", async (req, res) => {
+  const { userId } = req.params; // Get user ID from the URL
+
+  try {
+    const query = `
+      SELECT id, location, age, floor_plan, bedrooms, additional_facilities, garden, parking, proximity_facilities, proximity_main_roads, tax_records, photo_url
+      FROM properties
+      WHERE user_id = ?;
+    `;
+    const [rows] = await pool.query(query, [userId]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "No properties found for this user." });
+    }
+
+    res.status(200).json(rows); // Return the list of properties
+  } catch (error) {
+    console.error("Error fetching properties:", error.message);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// DELETE API to delete a property by ID
+app.delete("/api/properties/:id", async (req, res) => {
+  const { id } = req.params; // Get the property ID from the URL
+
+  try {
+    // Delete the property with the specified ID
+    const query = "DELETE FROM properties WHERE id = ?";
+    const [result] = await pool.query(query, [id]);
+
+    if (result.affectedRows === 0) {
+      // If no rows were affected, the property ID does not exist
+      return res.status(404).json({ message: "Property not found." });
+    }
+
+    res.status(200).json({ message: "Property deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting property:", error.message);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
+// Serve static files (e.g., uploaded photos)
+app.use("/uploads", express.static("uploads"));
 
 const PORT = process.env.SQL_PORT || 3306;
 app.listen(PORT, () => {
