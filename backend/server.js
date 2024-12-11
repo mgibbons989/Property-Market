@@ -179,9 +179,13 @@ const createAdminUser = async () => {
 //   }
 // };
 
-createUsersTable();
-createPropertiesTable();
-createAdminUser();
+const initTables = async () => {
+  await createUsersTable();
+  await createPropertiesTable();
+  await createAdminUser();
+}
+
+initTables();
 
 app.get("/", (req, res) => {
   res.send("Backend is running!");
