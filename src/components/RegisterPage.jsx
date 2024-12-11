@@ -13,13 +13,14 @@ function Register() {
   const [type, setType] = useState("seller");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const BASE_URL = "http://junction.proxy.rlwy.net:54193";
 
   const handleRegister = async (e) => {
     e.preventDefault();
     setError(""); // Clear previous errors
 
     try {
-      const response = await axios.post("http://localhost:3306/register", {
+      const response = await axios.post(`${BASE_URL}/register`, {
         firstName,
         lastName,
         email,

@@ -19,6 +19,8 @@ function Login() {
   // const user = localStorage.getItem("user");
   console.log(user);
 
+  const BASE_URL = "http://junction.proxy.rlwy.net:54193";
+
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -28,7 +30,7 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post("http://junction.proxy.rlwy.net:54193", {
+      const response = await axios.post(BASE_URL, {
         email,
         password,
       });
@@ -42,7 +44,7 @@ function Login() {
         // localStorage.setItem("user", JSON.stringify(user));
         if (userData.type === "seller") {
           const propertiesResponse = await axios.get(
-            `http://localhost:3306/api/properties?user_id=${userData.id}`
+            `${BASE_URL}/api/properties?user_id=${userData.id}`
           );
 
           setCards(propertiesResponse.data);

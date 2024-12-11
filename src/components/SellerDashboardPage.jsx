@@ -11,6 +11,7 @@ import AdminDashboardPage from "./AdminDashboardPage";
 
 function DashboardPage() {
   const { user } = useUser();
+  const BASE_URL = "http://junction.proxy.rlwy.net:54193";
 
   if (!user) {
     return <Navigate to="/" replace />;
@@ -49,7 +50,7 @@ function DashboardPage() {
     const fetchProperties = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:3306/api/properties/${user.id}`
+          `${BASE_URL}/api/properties/${user.id}`
         );
         setCards(response.data); // Update state with the fetched properties
       } catch (error) {
@@ -95,7 +96,7 @@ function DashboardPage() {
       if (editingCard) {
         // Edit mode: Update existing property
         const response = await axios.put(
-          `http://localhost:3306/api/properties/${editingCard.id}`,
+          `${BASE_URL}/api/properties/${editingCard.id}`,
           formData,
           {
             headers: {
@@ -115,7 +116,7 @@ function DashboardPage() {
       } else {
         // Add mode: Add a new property
         const response = await axios.post(
-          "http://localhost:3306/api/properties",
+          `${BASE_URL}/api/properties`,
           formData,
           {
             headers: {
@@ -161,7 +162,7 @@ function DashboardPage() {
     if (window.confirm("Are you sure you want to delete this property?")) {
       try {
         const response = await axios.delete(
-          `http://localhost:3306/api/properties/${id}`
+          `${BASE_URL}/api/properties/${id}`
         );
         if (response.status === 200) {
           console.log("Property deleted successfully");
