@@ -93,7 +93,7 @@ app.post("/", async (req, res) => {
       .json({
         message: "Login successful",
         token,
-        user: { id, first_name, last_name, type },
+        userData: { id, first_name, last_name, type },
       });
   } catch (error) {
     console.error("Error during login:", error.message);

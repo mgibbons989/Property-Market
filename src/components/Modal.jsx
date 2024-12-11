@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 function Modal(props) {
   if (!props.isOpen) return null;
 

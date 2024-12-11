@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useUser } from "./UserContext";
 
 import Header from "./Header";
 import Footer from "./Footer";
@@ -13,8 +14,11 @@ function Login() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const { user, setUser } = useUser();
 
-  const user = localStorage.getItem("user");
+  // const user = localStorage.getItem("user");
+  console.log(user);
+  
   if (user) {
     return <Navigate to="/dashboard" replace />;
   }
@@ -31,14 +35,13 @@ function Login() {
 
       if (response.status === 200) {
         alert("Login successful!");
-        const { token, user } = response.data;
-        console.log(user);
+        const { token, userData } = response.data;
+        console.log(token, userData);
 
-        localStorage.setItem("user", JSON.stringify(user));
-        // Navigate to correct dashboard (sellger, buyer, admin)
+        setUser(userData);
+        // localStorage.setItem("user", JSON.stringify(user));
+        // Navigate to correct dashboard (seller, buyer, admin)
         navigate("/dashboard");
-      } else {
-        alert("Incorrect");
       }
     } catch (err) {
       if (err.response) {

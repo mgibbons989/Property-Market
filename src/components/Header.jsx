@@ -1,16 +1,9 @@
-import { useEffect, useState } from 'react'
+import { useUser } from "./UserContext";
 import AboutButton from "./AboutButton";
 import LogoutButton from "./LogoutButton";
 
 function Header() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    const user = localStorage.getItem("user");
-    setIsLoggedIn(!!user); // If user exists
-    console.log(!!user);
-    
-  }, []);
+  const { user } = useUser();
 
   const style = {
     display: 'flex',
@@ -20,9 +13,10 @@ function Header() {
   return (
     <header className="header">
       <h1>Property Market</h1>
+      {user && <h2>{user.type} Dashboard</h2>}
       <div style={style}>
         <AboutButton />
-        {isLoggedIn && <LogoutButton />}
+        {user && <LogoutButton />}
       </div>
     </header>
   );
