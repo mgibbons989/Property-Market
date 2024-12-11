@@ -645,7 +645,7 @@ app.delete("/api/properties/:id", async (req, res) => {
 // Serve static files (e.g., uploaded photos)
 app.use("/uploads", express.static("uploads"));
 
-const PORT = process.env.PG_PORT || 5000;
-app.listen(PORT, () => {
+const PORT = process.env.PG_PORT || 3000;
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
