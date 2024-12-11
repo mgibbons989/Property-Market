@@ -28,7 +28,7 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:3306/", {
+      const response = await axios.post("http://junction.proxy.rlwy.net:54193", {
         email,
         password,
       });
