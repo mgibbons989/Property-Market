@@ -28,7 +28,6 @@ function Header() {
         <ul className="link">
           {/* <li><a href="">About</a></li> */}
           <li><AboutButton /></li>
-          {user && <li>{user.type} Dashboard</li>}
           {user && <li><LogoutButton /></li>}
         </ul>
       </nav>

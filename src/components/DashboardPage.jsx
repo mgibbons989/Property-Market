@@ -6,6 +6,9 @@ import Footer from "./Footer";
 import Modal from "./Modal";
 import axios from "axios";
 
+import "../dashboard.css";
+import plus from '../images/plus.png';
+
 function DashboardPage() {
   const { user } = useUser();
   const [cards, setCards] = useState([]); // State to hold cards
@@ -121,12 +124,13 @@ function DashboardPage() {
       <Header />
       <div className="dashboard">
         <h1>
-          Welcome to your dashboard {user.first_name} {user.last_name}!
+          {user.first_name}'s {user.type.charAt(0).toUpperCase() + user.type.slice(1)} Dashboard
         </h1>
         <div className="grid">
           {/* Button card to add new information */}
-          <div className="card" onClick={toggleModal}>
-            <p>Add Property</p>
+          <div className="card add-card" onClick={toggleModal}>
+            <h2>Add Property</h2>
+            <img src={plus} alt="plus icon" />
           </div>
 
           {/* Render cards */}
@@ -155,15 +159,15 @@ function DashboardPage() {
                 />
               )}
               <div className="card-details">
-                <p>
+                <li>
                   <strong>Location:</strong> {card.location}
-                </p>
-                <p>
+                </li>
+                <li>
                   <strong>Bedrooms:</strong> {card.bedrooms}
-                </p>
-                <p>
-                  <strong>Age:</strong> {card.age}
-                </p>
+                </li>
+                <li>
+                  <strong>Age:</strong> {card.age} years old
+                </li>
               </div>
             </div>
           ))}

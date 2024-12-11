@@ -64,7 +64,7 @@ header h1 {
 header nav a {
     color: white;
     text-decoration: none;
-    margin-left: 20px;
+    /* margin-left: 20px; */
     font-size: 1.1rem;
     font-weight: 500;
 }
@@ -74,7 +74,7 @@ header nav button {
     font-family: 'Poppins', sans-serif;
     color: white;
     text-decoration: none;
-    margin-left: 20px;
+    /* margin-left: 20px; */
     font-size: 1.1rem;
     font-weight: 500;
 }
@@ -82,7 +82,7 @@ header nav button {
 .link {
     list-style: none;
     display: flex;
-    gap: 20px;
+    gap: 10px;
     margin: 0;
     padding: 0;
 }
