@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Register() {
   const [firstName, setFirstName] = useState("");
@@ -26,7 +26,7 @@ function Register() {
 
       if (response.status === 201) {
         alert("Registration successful! Please login.");
-        navigate("/login"); // Redirect to the login page
+        navigate("/"); // Redirect to the login page
       }
     } catch (err) {
       if (err.response) {
@@ -104,7 +104,7 @@ function Register() {
         <button type="submit">Register</button>
       </form>
       <p>
-        Already have an account? <a href="/login">Login here</a>
+        Already have an account? <Link to="/">Login here</Link>
       </p>
     </div>
   );
