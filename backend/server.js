@@ -126,10 +126,10 @@ const initTables = async () => {
 
 initTables();
 
-app.get("/", (req, res) => {
-  console.log("Getting /");
-  res.sendFile(path.join(__dirname, "../dist", "index.html"));
-});
+// app.get("/", (req, res) => {
+//   console.log("Getting /");
+//   res.sendFile(path.join(__dirname, "../dist", "index.html"));
+// });
 
 // Login API
 // MySQL
@@ -369,8 +369,8 @@ app.delete("/api/properties/:id", async (req, res) => {
 });
 
 app.get("*", (req, res) => {
-  console.log("wild card");
-  
+  console.log("Wildcard route triggered for:", req.path);
+  console.log("Serving file from:", path.join(__dirname, "../dist", "index.html"));
   res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
