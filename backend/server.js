@@ -11,11 +11,23 @@ import path from "path";
 
 const app = express();
 
+const allowedOrigins = [
+  "https://james-j-han.github.io", // Your GitHub Pages URL
+  "https://loving-friendship-production.up.railway.app", // Optional, backend URL for testing
+];
+
 app.use(
   cors({
-    origin: "https://property-market-production.up.railway.app",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true, // Allow cookies and authentication
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or Postman)
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    credentials: true, // Allow cookies and authentication headers
   })
 );
 // app.use(cors());

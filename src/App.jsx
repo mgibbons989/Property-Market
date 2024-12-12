@@ -33,7 +33,9 @@ const router = createBrowserRouter([
     element: <AdminDashboardPage />,
     errorElement: <div>404 Not Found</div>
   }
-]);
+], {
+  basename: "/property-market",
+});
 
 function App() {
   return (
