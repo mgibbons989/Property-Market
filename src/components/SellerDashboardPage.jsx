@@ -39,7 +39,7 @@ function DashboardPage() {
     parking: false,
     proximity_facilities: "1",
     proximity_main_roads: "1",
-    tax_records: "",
+    tax_records: "1050.00",
     photo: null, // Initial value for the file input
   });
   const [editingCard, setEditingCard] = useState(null); // For editing
@@ -277,7 +277,7 @@ function DashboardPage() {
                   <label htmlFor="age">Age</label>
                   <select
                     id="age"
-                    value={newCardData.age || ""}
+                    value={newCardData.age || "1"}
                     onChange={(e) =>
                       setNewCardData({ ...newCardData, age: e.target.value })
                     }
@@ -317,7 +317,7 @@ function DashboardPage() {
                   <label htmlFor="bedrooms"># of Bedrooms</label>
                   <select
                     id="bedrooms"
-                    value={newCardData.bedrooms || ""}
+                    value={newCardData.bedrooms || "1"}
                     onChange={(e) =>
                       setNewCardData({
                         ...newCardData,
@@ -392,7 +392,7 @@ function DashboardPage() {
                   </label>
                   <select
                     id="proximity_facilities"
-                    value={newCardData.proximity_facilities || ""}
+                    value={newCardData.proximity_facilities || "1"}
                     onChange={(e) =>
                       setNewCardData({
                         ...newCardData,
@@ -415,7 +415,7 @@ function DashboardPage() {
                   </label>
                   <select
                     id="proximity_main_roads"
-                    value={newCardData.proximity_main_roads || ""}
+                    value={newCardData.proximity_main_roads || "1"}
                     onChange={(e) =>
                       setNewCardData({
                         ...newCardData,
@@ -438,7 +438,7 @@ function DashboardPage() {
                     type="text"
                     id="tax_records"
                     placeholder="e.g., 1000.50"
-                    value={newCardData.tax_records || ""}
+                    value={newCardData.tax_records || "1000.50"}
                     onChange={(e) =>
                       setNewCardData({
                         ...newCardData,

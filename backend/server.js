@@ -340,8 +340,15 @@ app.get("/api/properties", async (req, res) => {
         .json({ message: "No properties found for this user." });
     }
 
+    // Default values
+    const processedRows = rows.map((row) => ({
+      ...row,
+      age: row.age || "1", // Default age to '1' if null or undefined
+      bedrooms: row.bedrooms || 1, // Default bedrooms to 1 if null or undefined
+    }));
+
     console.log("Properties fetched successfully:", rows);
-    res.status(200).json(rows); // Return the list of properties
+    res.status(200).json(processedRows); // Return the list of properties
   } catch (error) {
     console.error("Error fetching properties:", error.message);
     res.status(500).json({ message: "Internal server error." });
