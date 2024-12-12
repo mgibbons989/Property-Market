@@ -11,7 +11,7 @@ import path from "path";
 
 const app = express();
 
-const BASE_URL = "https://loving-friendship-production.up.railway.app"
+const BASE_URL = "https://loving-friendship-production.up.railway.app";
 const allowedOrigins = [
   "https://james-j-han.github.io", // Your GitHub Pages URL
   "https://loving-friendship-production.up.railway.app", // Optional, backend URL for testing
@@ -257,9 +257,10 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
     tax_records,
   } = req.body;
 
-  const photoPath = req.file ? `${BASE_URL}/uploads/${req.file.filename}` : null; // Save file path if uploaded
+  const photoPath = req.file
+    ? `${BASE_URL}/uploads/${req.file.filename}`
+    : null; // Save file path if uploaded
   console.log(`photo path: ${photoPath}`);
-  
 
   try {
     const query = `
@@ -367,38 +368,66 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
   const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
-    // Update photo only if a new photo is uploaded
-    const query = `
-      UPDATE Properties 
-      SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, 
-          additional_facilities = ?, garden = ?, parking = ?, 
-          proximity_facilities = ?, proximity_main_roads = ?, 
-          tax_records = ?, photo_url = IFNULL(?, photo_url)
-      WHERE id = ?;
-    `;
-    // const query = `
-    //   UPDATE Properties 
-    //   SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, additional_facilities = ?, garden = ?, parking = ?, proximity_facilities = ?, proximity_main_roads = ?, tax_records = ?, photo_url = ?
-    //   WHERE id = ?;
-    // `;
-    const values = [
-      location,
-      age,
-      floor_plan,
-      parsedBedrooms,
-      additional_facilities,
-      parsedGarden,
-      parsedParking,
-      parsedProximityFacilities,
-      parsedProximityMainRoads,
-      parsedTaxRecords,
-      photoPath,
-      id,
-    ];
+    let query, values;
+
+    if (photoPath) {
+      // If a new photo is uploaded, update the photo_url
+      query = `
+        UPDATE Properties 
+        SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, 
+            additional_facilities = ?, garden = ?, parking = ?, 
+            proximity_facilities = ?, proximity_main_roads = ?, 
+            tax_records = ?, photo_url = ?
+        WHERE id = ?;
+      `;
+      values = [
+        location,
+        age,
+        floor_plan,
+        parsedBedrooms,
+        additional_facilities,
+        parsedGarden,
+        parsedParking,
+        parsedProximityFacilities,
+        parsedProximityMainRoads,
+        parsedTaxRecords,
+        photoPath,
+        id,
+      ];
+    } else {
+      // If no new photo is uploaded, retain the existing photo_url
+      query = `
+        UPDATE Properties 
+        SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, 
+            additional_facilities = ?, garden = ?, parking = ?, 
+            proximity_facilities = ?, proximity_main_roads = ?, 
+            tax_records = ?
+        WHERE id = ?;
+      `;
+      values = [
+        location,
+        age,
+        floor_plan,
+        parsedBedrooms,
+        additional_facilities,
+        parsedGarden,
+        parsedParking,
+        parsedProximityFacilities,
+        parsedProximityMainRoads,
+        parsedTaxRecords,
+        id,
+      ];
+    }
 
     await pool.query(query, values);
 
-    res.status(200).json({ message: "Property updated successfully." });
+    // Fetch the updated property to return
+    const [updatedProperty] = await pool.query(
+      "SELECT * FROM Properties WHERE id = ?",
+      [id]
+    );
+
+    res.status(200).json(updatedProperty[0]);
   } catch (error) {
     console.error("Error updating property:", error.message);
     res.status(500).json({ message: "Internal server error." });
