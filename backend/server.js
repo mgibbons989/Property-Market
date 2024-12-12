@@ -307,7 +307,12 @@ app.get("/api/properties/:userId", async (req, res) => {
         .json({ message: "No properties found for this user." });
     }
 
-    res.status(200).json(rows); // Return the list of properties
+    const updatedRows = rows.map((row) => ({
+      ...row,
+      photo_url: row.photo_url ? `${BASE_URL}${row.photo_url}` : null, // Add BASE_URL to photo_url
+    }));
+
+    res.status(200).json(updatedRows); // Return the list of properties
   } catch (error) {
     console.error("Error fetching properties:", error.message);
     res.status(500).json({ message: "Internal server error." });
