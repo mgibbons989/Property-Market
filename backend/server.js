@@ -22,12 +22,21 @@ const allowedOrigins = [
 // Define __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
+const uploadsDir = path.join(__dirname, "uploads");
+const upload = multer({ dest: path.join(__dirname, "uploads") });
 
-fs.readdir(path.join(__dirname, 'uploads'), (err, files) => {
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir, { recursive: true });
+  console.log("Uploads directory created");
+} else {
+  console.log("Uploads directory already exists");
+}
+
+fs.readdir(path.join(__dirname, "uploads"), (err, files) => {
   if (err) {
-    console.error('Error reading uploads directory:', err);
+    console.error("Error reading uploads directory:", err);
   } else {
-    console.log('Files in uploads directory:', files);
+    console.log("Files in uploads directory:", files);
   }
 });
 
@@ -76,16 +85,6 @@ const pool = mysql
   })
   .promise();
 
-// Ensure 'uploads' directory exists
-const uploadsDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir);
-  console.log("'uploads' folder created.");
-}
-
-// Serve the uploads directory
-app.use("/uploads", express.static(uploadsDir));
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, "uploads/"); // Directory to save the uploaded files
@@ -94,8 +93,6 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname)); // Unique filename with original extension
   },
 });
-
-const upload = multer({ storage });
 
 // MySQL
 const createUsersTable = async () => {
