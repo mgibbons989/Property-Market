@@ -23,6 +23,14 @@ const allowedOrigins = [
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+fs.readdir(path.join(__dirname, 'uploads'), (err, files) => {
+  if (err) {
+    console.error('Error reading uploads directory:', err);
+  } else {
+    console.log('Files in uploads directory:', files);
+  }
+});
+
 app.use(
   cors({
     origin: (origin, callback) => {
