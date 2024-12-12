@@ -396,11 +396,7 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
       id,
     ];
 
-    const [result] = await pool.query(query, values);
-
-    if (result.affectedRows === 0) {
-      return res.status(404).json({ message: "Property not found." });
-    }
+    await pool.query(query, values);
 
     res.status(200).json({ message: "Property updated successfully." });
   } catch (error) {
