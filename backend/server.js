@@ -257,7 +257,7 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
     tax_records,
   } = req.body;
 
-  const photoPath = req.file ? `/uploads/${req.file.filename}` : null; // Save file path if uploaded
+  const photoPath = req.file ? `${BASE_URL}/uploads/${req.file.filename}` : null; // Save file path if uploaded
 
   try {
     const query = `
@@ -308,12 +308,7 @@ app.get("/api/properties/:userId", async (req, res) => {
         .json({ message: "No properties found for this user." });
     }
 
-    const updatedRows = rows.map((row) => ({
-      ...row,
-      photo_url: row.photo_url ? `${BASE_URL}${row.photo_url}` : null, // Add BASE_URL to photo_url
-    }));
-
-    res.status(200).json(updatedRows); // Return the list of properties
+    res.status(200).json(rows); // Return the list of properties
   } catch (error) {
     console.error("Error fetching properties:", error.message);
     res.status(500).json({ message: "Internal server error." });
