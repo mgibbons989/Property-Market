@@ -119,13 +119,14 @@ const initTables = async () => {
 initTables();
 
 app.get("*", (req, res) => {
+  console.log("wild card");
+  
   res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 app.get("/", (req, res) => {
   console.log("Getting /");
-
-  res.send("Backend is running!");
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 // Login API

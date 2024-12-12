@@ -30,7 +30,7 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post(BASE_URL, {
+      const response = await axios.post(`${BASE_URL}/api/login`, {
         email,
         password,
       });
