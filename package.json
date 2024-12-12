@@ -2,7 +2,7 @@
   "name": "property-market",
   "private": true,
   "version": "0.0.0",
-  "homepage": "https://james-h-han.github.io/property-market",
+  "homepage": "https://james-j-han.github.io/property-market",
   "type": "module",
   "scripts": {
     "dev": "vite",
