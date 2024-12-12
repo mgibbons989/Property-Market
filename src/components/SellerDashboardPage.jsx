@@ -238,6 +238,7 @@ function DashboardPage() {
                       src={card.photo_url}
                       alt="Property"
                       className="property-image"
+                      crossOrigin="anonymous"
                     />
                   )}
                   <div className="card-details">

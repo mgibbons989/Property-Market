@@ -13,6 +13,8 @@ const app = express();
 
 const BASE_URL = "https://loving-friendship-production.up.railway.app";
 const allowedOrigins = [
+  "http://localhost:3000",
+  "http://127.0.0.1:3000",
   "https://james-j-han.github.io", // Your GitHub Pages URL
   "https://loving-friendship-production.up.railway.app", // Optional, backend URL for testing
 ];
@@ -37,7 +39,14 @@ app.use(
 );
 
 // Static files middleware for serving images
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use(
+  "/uploads",
+  express.static(path.join(__dirname, "uploads"), {
+    setHeaders: (res) => {
+      res.set("Cache-Control", "public, max-age=31536000");
+    },
+  })
+);
 
 // JSON parsing middleware
 app.use(bodyParser.json());
