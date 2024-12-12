@@ -331,6 +331,27 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
     tax_records,
   } = req.body;
 
+  console.log("Request body data and types:");
+  console.log(`location (${typeof location}):`, location);
+  console.log(`age (${typeof age}):`, age);
+  console.log(`floor_plan (${typeof floor_plan}):`, floor_plan);
+  console.log(`bedrooms (${typeof bedrooms}):`, bedrooms);
+  console.log(
+    `additional_facilities (${typeof additional_facilities}):`,
+    additional_facilities
+  );
+  console.log(`garden (${typeof garden}):`, garden);
+  console.log(`parking (${typeof parking}):`, parking);
+  console.log(
+    `proximity_facilities (${typeof proximity_facilities}):`,
+    proximity_facilities
+  );
+  console.log(
+    `proximity_main_roads (${typeof proximity_main_roads}):`,
+    proximity_main_roads
+  );
+  console.log(`tax_records (${typeof tax_records}):`, tax_records);
+
   const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
