@@ -119,17 +119,13 @@ function DashboardPage() {
     try {
       if (editingCard) {
         // Edit property
-        const response = await axios.put(`${BASE_URL}/api/properties`, {
-          params: { id: editingCard.id },
-          headers: { "Content-Type": "multipart/form-data" },
-        });
-        // const response = await axios.put(
-        //   `${BASE_URL}/api/properties/${editingCard.id}`,
-        //   formData,
-        //   {
-        //     headers: { "Content-Type": "multipart/form-data" },
-        //   }
-        // );
+        const response = await axios.put(
+          `${BASE_URL}/api/properties/${editingCard.id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        );
         if (response.status === 200) {
           console.log("Property updated successfully.");
         }

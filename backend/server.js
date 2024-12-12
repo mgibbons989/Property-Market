@@ -350,7 +350,7 @@ app.get("/api/properties", async (req, res) => {
 
 // EDIT API
 // MySQL
-app.put("/api/properties/", upload.single("photo"), async (req, res) => {
+app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
   console.log("Saving property edit");
   
   const { id } = req.params;
