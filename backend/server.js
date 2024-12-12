@@ -6,7 +6,8 @@ import dotenv from "dotenv";
 import bodyParser from "body-parser";
 import bcrypt from "bcrypt";
 import { fileURLToPath } from "url";
-// import path from "path";
+import fs from "fs";
+import path from "path";
 
 const app = express();
 
@@ -31,8 +32,15 @@ const pool = mysql
   })
   .promise();
 
-// Configure multer for file uploads
-import path from "path";
+// Ensure 'uploads' directory exists
+const uploadsDir = path.join(__dirname, "uploads");
+if (!fs.existsSync(uploadsDir)) {
+  fs.mkdirSync(uploadsDir);
+  console.log("'uploads' folder created.");
+}
+
+// Serve the uploads directory
+app.use("/uploads", express.static(uploadsDir));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
@@ -113,7 +121,7 @@ const createAdminUser = async () => {
 const initTables = async () => {
   await createUsersTable();
   await createPropertiesTable();
-  await createAdminUser();
+  // await createAdminUser();
 };
 
 initTables();
@@ -376,6 +384,7 @@ console.log(`MYSQLUSER: ${process.env.MYSQLUSER}`);
 console.log(`MYSQLDATABASE: ${process.env.MYSQLDATABASE}`);
 console.log(`MYSQLPASSWORD: ${process.env.MYSQLPASSWORD}`);
 console.log(`MYSQLPORT: ${process.env.MYSQLPORT}`);
+console.log("Serving static files from:", path.join(__dirname, "../dist"));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
