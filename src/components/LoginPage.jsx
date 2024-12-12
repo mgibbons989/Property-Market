@@ -6,7 +6,7 @@ import { useUser } from "./UserContext";
 import Header from "./Header";
 import Footer from "./Footer";
 
-// const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:3306";
+// const API_BASE_URL = process.env.REACT_APP_API_BASE_URL || "http://127.0.0.1:5000";
 // console.log(API_BASE_URL);
 
 function Login() {
@@ -28,7 +28,7 @@ function Login() {
     setError("");
 
     try {
-      const response = await axios.post("http://localhost:3306/", {
+      const response = await axios.post("http://localhost:5000/", {
         email,
         password,
       });
@@ -42,7 +42,7 @@ function Login() {
         // localStorage.setItem("user", JSON.stringify(user));
         if (userData.type === "seller") {
           const propertiesResponse = await axios.get(
-            `http://localhost:3306/api/properties?user_id=${userData.id}`
+            `http://localhost:5000/api/properties?user_id=${userData.id}`
           );
 
           setCards(propertiesResponse.data);

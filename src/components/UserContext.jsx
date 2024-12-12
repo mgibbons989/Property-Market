@@ -15,7 +15,7 @@ export const UserProvider = ({ children }) => {
   const updateUser = (newUser) => {
     setUser(newUser);
     if (newUser) {
-      localStorage.setItem("user", JSON.stringify(newUser)); // Save user to localStorage
+      localStorage.setItem("user", JSON.stringify(newUser)); 5000// Save user to localStorage
     } else {
       localStorage.removeItem("user"); // Remove user from localStorage
       setCards([]);
