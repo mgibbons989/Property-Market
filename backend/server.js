@@ -27,7 +27,7 @@ const pool = mysql
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
-    port: process.env.MYSQLPORT || 3306
+    port: process.env.MYSQLPORT || 3306,
   })
   .promise();
 
@@ -114,7 +114,7 @@ const initTables = async () => {
   await createUsersTable();
   await createPropertiesTable();
   await createAdminUser();
-}
+};
 
 initTables();
 
@@ -371,6 +371,11 @@ app.use("/uploads", express.static("uploads"));
 
 console.log("Initializing server...");
 // console.log("Environment Variables", process.env);
+console.log(`MYSQLHOST: ${process.env.MYSQLHOST}`);
+console.log(`MYSQLUSER: ${process.env.MYSQLUSER}`);
+console.log(`MYSQLDATABASE: ${process.env.MYSQLDATABASE}`);
+console.log(`MYSQLPASSWORD: ${process.env.MYSQLPASSWORD}`);
+console.log(`MYSQLPORT: ${process.env.MYSQLPORT}`);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
