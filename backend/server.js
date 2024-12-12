@@ -26,14 +26,6 @@ const pool = mysql
   })
   .promise();
 
-// const pool = new Pool({
-//   user: process.env.PG_USER,
-//   host: process.env.PG_HOST,
-//   database: process.env.PG_DATABASE,
-//   password: process.env.PG_PASSWORD,
-//   port: process.env.PG_PORT || 5000,
-// });
-
 // Configure multer for file uploads
 import path from "path";
 
@@ -69,27 +61,6 @@ const createUsersTable = async () => {
   }
 };
 
-// Postgres
-// const createUsersTable = async () => {
-//   try {
-//     const createTableQuery = `
-//       CREATE TABLE IF NOT EXISTS Users (
-//         id SERIAL PRIMARY KEY,
-//         first_name VARCHAR(50) NOT NULL,
-//         last_name VARCHAR(50) NOT NULL,
-//         email VARCHAR(255) UNIQUE NOT NULL,
-//         password VARCHAR(255) NOT NULL,
-//         type VARCHAR(20) CHECK (type IN ('seller', 'buyer', 'admin')) NOT NULL DEFAULT 'seller',
-//         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-//       );
-//     `;
-//     await pool.query(createTableQuery);
-//     console.log("Users table created or already exists.");
-//   } catch (error) {
-//     console.error("Error creating Users table:", error.message);
-//   }
-// };
-
 // MySQL
 const createPropertiesTable = async () => {
   try {
@@ -118,34 +89,6 @@ const createPropertiesTable = async () => {
   }
 };
 
-// Postgres
-// const createPropertiesTable = async () => {
-//   try {
-//     const createPropertiesQuery = `
-//       CREATE TABLE IF NOT EXISTS Properties (
-//         id SERIAL PRIMARY KEY,
-//         user_id INT NOT NULL,
-//         location VARCHAR(255),
-//         age VARCHAR(10),
-//         floor_plan VARCHAR(255),
-//         bedrooms INT,
-//         additional_facilities VARCHAR(255),
-//         garden BOOLEAN DEFAULT FALSE,
-//         parking BOOLEAN DEFAULT FALSE,
-//         proximity_facilities INT,
-//         proximity_main_roads INT,
-//         tax_records NUMERIC(10, 2),
-//         photo_url VARCHAR(255),
-//         FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
-//       );
-//     `;
-//     await pool.query(createPropertiesQuery);
-//     console.log("Properties table created or already exists.");
-//   } catch (error) {
-//     console.error("Error creating Properties table:", error.message);
-//   }
-// };
-
 // MySQL
 const createAdminUser = async () => {
   const hashedPassword = await bcrypt.hash("1234", 10);
@@ -161,23 +104,6 @@ const createAdminUser = async () => {
     console.error("Error creating Admin:", error.message);
   }
 };
-
-// Postgres
-// const createAdminUser = async () => {
-//   const hashedPassword = await bcrypt.hash("1234", 10);
-//   try {
-//     const createAdminQuery = `
-//       INSERT INTO Users (first_name, last_name, email, password, type)
-//       VALUES ($1, $2, $3, $4, $5)
-//       ON CONFLICT (email) DO NOTHING;
-//     `;
-//     const values = ["admin", "admin", "a@gmail.com", hashedPassword, "admin"];
-//     await pool.query(createAdminQuery, values);
-//     console.log("Admin was created or already exists.");
-//   } catch (error) {
-//     console.error("Error creating Admin:", error.message);
-//   }
-// };
 
 const initTables = async () => {
   await createUsersTable();
@@ -242,43 +168,6 @@ app.post("/", async (req, res) => {
   }
 });
 
-// Postgres
-// app.post("/", async (req, res) => {
-//   const { email, password } = req.body;
-
-//   if (!email || !password) {
-//     return res.status(400).json({ message: "Email and password are required." });
-//   }
-
-//   try {
-//     const result = await pool.query("SELECT * FROM Users WHERE email = $1", [
-//       email,
-//     ]);
-
-//     if (result.rows.length === 0) {
-//       return res.status(404).json({ message: "User not found." });
-//     }
-
-//     const user = result.rows[0];
-//     const isMatch = await bcrypt.compare(password, user.password);
-
-//     if (!isMatch) {
-//       return res.status(401).json({ message: "Invalid password." });
-//     }
-
-//     const token = "fake-jwt-token";
-//     const { id, first_name, last_name, type } = user;
-//     return res.status(200).json({
-//       message: "Login successful",
-//       token,
-//       userData: { id, first_name, last_name, type },
-//     });
-//   } catch (error) {
-//     console.error("Error during login:", error.message);
-//     return res.status(500).json({ message: "Internal server error." });
-//   }
-// });
-
 // MySQL
 app.post("/register", async (req, res) => {
   console.log("Attempting to register...");
@@ -322,32 +211,6 @@ app.post("/register", async (req, res) => {
     res.status(500).json({ message: "Internal server error." });
   }
 });
-
-// Postgres
-// app.post("/register", async (req, res) => {
-//   const { email, password, firstName, lastName, type } = req.body;
-
-//   if (!email || !password || !firstName || !lastName || !type) {
-//     return res.status(400).json({ message: "All fields are required." });
-//   }
-
-//   if (type !== "buyer" && type !== "seller") {
-//     return res.status(400).json({ message: "Invalid user type." });
-//   }
-
-//   try {
-//     const hashedPassword = await bcrypt.hash(password, 10);
-//     const query = `
-//       INSERT INTO Users (email, password, first_name, last_name, type)
-//       VALUES ($1, $2, $3, $4, $5);
-//     `;
-//     await pool.query(query, [email, hashedPassword, firstName, lastName, type]);
-//     res.status(201).json({ message: "User registered successfully." });
-//   } catch (error) {
-//     console.error("Error during registration:", error.message);
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// });
 
 // Endpoint to save property with photo
 app.post("/api/properties", upload.single("photo"), async (req, res) => {
@@ -398,52 +261,6 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
   }
 });
 
-// Postgres
-// app.post("/api/properties", upload.single("photo"), async (req, res) => {
-//   const {
-//     user_id,
-//     location,
-//     age,
-//     floor_plan,
-//     bedrooms,
-//     additional_facilities,
-//     garden,
-//     parking,
-//     proximity_facilities,
-//     proximity_main_roads,
-//     tax_records,
-//   } = req.body;
-
-//   const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
-
-//   try {
-//     const query = `
-//       INSERT INTO Properties (user_id, location, age, floor_plan, bedrooms, additional_facilities, garden, parking, proximity_facilities, proximity_main_roads, tax_records, photo_url)
-//       VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12);
-//     `;
-//     const values = [
-//       user_id,
-//       location,
-//       age,
-//       floor_plan,
-//       bedrooms,
-//       additional_facilities,
-//       garden,
-//       parking,
-//       proximity_facilities,
-//       proximity_main_roads,
-//       tax_records,
-//       photoPath,
-//     ];
-
-//     await pool.query(query, values);
-//     res.status(201).json({ message: "Property added successfully", photoPath });
-//   } catch (error) {
-//     console.error("Error saving property:", error.message);
-//     res.status(500).json({ message: "Error saving property" });
-//   }
-// });
-
 // MySQL
 app.get("/api/properties/:userId", async (req, res) => {
   const { userId } = req.params; // Get user ID from the URL
@@ -468,30 +285,6 @@ app.get("/api/properties/:userId", async (req, res) => {
     res.status(500).json({ message: "Internal server error." });
   }
 });
-
-// Postgres
-// app.get("/api/properties/:userId", async (req, res) => {
-//   const { userId } = req.params; // Get user ID from the URL
-
-//   try {
-//     const query = `
-//       SELECT id, location, age, floor_plan, bedrooms, additional_facilities, garden, parking, 
-//              proximity_facilities, proximity_main_roads, tax_records, photo_url
-//       FROM properties
-//       WHERE user_id = $1;
-//     `;
-//     const result = await pool.query(query, [userId]);
-
-//     if (result.rows.length === 0) {
-//       return res.status(404).json({ message: "No properties found for this user." });
-//     }
-
-//     res.status(200).json(result.rows); // Return the list of properties
-//   } catch (error) {
-//     console.error("Error fetching properties:", error.message);
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// });
 
 // EDIT API
 // MySQL
@@ -546,60 +339,6 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
   }
 });
 
-// Postgres
-// app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
-//   const { id } = req.params;
-//   const {
-//     location,
-//     age,
-//     floor_plan,
-//     bedrooms,
-//     additional_facilities,
-//     garden,
-//     parking,
-//     proximity_facilities,
-//     proximity_main_roads,
-//     tax_records,
-//   } = req.body;
-
-//   const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
-
-//   try {
-//     const query = `
-//       UPDATE properties
-//       SET location = $1, age = $2, floor_plan = $3, bedrooms = $4, additional_facilities = $5, 
-//           garden = $6, parking = $7, proximity_facilities = $8, proximity_main_roads = $9, 
-//           tax_records = $10, photo_url = $11
-//       WHERE id = $12;
-//     `;
-//     const values = [
-//       location,
-//       age,
-//       floor_plan,
-//       bedrooms,
-//       additional_facilities,
-//       garden,
-//       parking,
-//       proximity_facilities,
-//       proximity_main_roads,
-//       tax_records,
-//       photoPath,
-//       id,
-//     ];
-
-//     const result = await pool.query(query, values);
-
-//     if (result.rowCount === 0) {
-//       return res.status(404).json({ message: "Property not found." });
-//     }
-
-//     res.status(200).json({ message: "Property updated successfully." });
-//   } catch (error) {
-//     console.error("Error updating property:", error.message);
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// });
-
 // DELETE API to delete a property by ID
 // MySQL
 app.delete("/api/properties/:id", async (req, res) => {
@@ -622,30 +361,10 @@ app.delete("/api/properties/:id", async (req, res) => {
   }
 });
 
-// Postgres
-// app.delete("/api/properties/:id", async (req, res) => {
-//   const { id } = req.params; // Get the property ID from the URL
-
-//   try {
-//     const query = "DELETE FROM properties WHERE id = $1;";
-//     const result = await pool.query(query, [id]);
-
-//     if (result.rowCount === 0) {
-//       // If no rows were affected, the property ID does not exist
-//       return res.status(404).json({ message: "Property not found." });
-//     }
-
-//     res.status(200).json({ message: "Property deleted successfully." });
-//   } catch (error) {
-//     console.error("Error deleting property:", error.message);
-//     res.status(500).json({ message: "Internal server error." });
-//   }
-// });
-
 // Serve static files (e.g., uploaded photos)
 app.use("/uploads", express.static("uploads"));
 
-const PORT = process.env.MYSQLPORT || 5000;
-app.listen(5000, "0.0.0.0", () => {
+const PORT = process.env.SQL_PORT || 5000;
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
