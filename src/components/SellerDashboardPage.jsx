@@ -41,45 +41,52 @@ function DashboardPage() {
     photo: null, // Initial value for the file input
   });
   const [editingCard, setEditingCard] = useState(null); // For editing
-  const [trigger, setTrigger] = useState(false);
+  const [loading, setLoading] = useState(true); // For fetching data from db
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const fetchProperties = async () => {
-    try {
-      const response = await axios.get(`${BASE_URL}/api/properties/${user.id}`);
-      console.log("Fetched properties:", response.data);
-      setCards(response.data); // Update state with the fetched properties
-    } catch (error) {
-      console.error(
-        "Error fetching properties:",
-        error.response?.data || error.message
-      );
-    }
-  };
-
-  // useEffect(() => {
-  //   const fetchProperties = async () => {
-  //     try {
-  //       const response = await axios.get(
-  //         `${BASE_URL}/api/properties/${user.id}`
-  //       );
-  //       console.log("Fetched properties:", response.data);
-  //       setCards(response.data); // Update state with the fetched properties
-  //     } catch (error) {
-  //       console.error(
-  //         "Error fetching properties:",
-  //         error.response?.data || error.message
-  //       );
-  //     }
-  //   };
-
-  //   if (user) {
-  //     fetchProperties();
+  // const fetchProperties = async () => {
+  //   try {
+  //     const response = await axios.get(`${BASE_URL}/api/properties/${user.id}`);
+  //     console.log("Fetched properties:", response.data);
+  //     setCards(response.data); // Update state with the fetched properties
+  //   } catch (error) {
+  //     console.error(
+  //       "Error fetching properties:",
+  //       error.response?.data || error.message
+  //     );
+  //   } finally {
+  //     setLoading(false);
   //   }
-  // }, [user, trigger]);
+  // };
+
+  useEffect(() => {
+    const fetchProperties = async () => {
+      try {
+        const response = await axios.get(`${BASE_URL}/api/properties`, {
+          params: { user_id: user.id },
+        });
+        console.log(`Fetched properties: ${response.data}`);
+        setCards(response.data);
+      } catch (error) {
+        console.error(
+          `Error fetching properties: ${error.response?.data || error.message}`
+        );
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (user) {
+      fetchProperties();
+    }
+  }, [user]);
+
+  if (loading) {
+    return <div>Loading properties...</div>;
+  }
 
   const handleSave = async () => {
     const formData = new FormData();
@@ -121,12 +128,8 @@ function DashboardPage() {
         );
         if (response.status === 200) {
           // Update the card in the UI
-          fetchProperties();
-          // setCards(
-          //   cards.map((card) =>
-          //     card.id === editingCard.id ? { ...card, ...response.data } : card
-          //   )
-          // );
+          // fetchProperties();
+          setLoading(true);
           setEditingCard(null); // Clear editing state
         }
       } else {
@@ -141,8 +144,8 @@ function DashboardPage() {
           }
         );
         if (response.status === 201) {
-          fetchProperties();
-          // setCards([...cards, { ...newCardData, id: response.data.id }]); // Add new card to UI
+          setLoading(true);
+          // fetchProperties();
         }
       }
 
@@ -178,9 +181,7 @@ function DashboardPage() {
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this property?")) {
       try {
-        const response = await axios.delete(
-          `${BASE_URL}/api/properties/${id}`
-        );
+        const response = await axios.delete(`${BASE_URL}/api/properties/${id}`);
         if (response.status === 200) {
           console.log("Property deleted successfully");
           setCards(cards.filter((card) => card.id !== id)); // Remove the card from the UI
@@ -203,51 +204,59 @@ function DashboardPage() {
         <h1>
           Welcome to your dashboard {user.first_name} {user.last_name}!
         </h1>
-        <div className="grid">
-          {/* Button card to add new information */}
-          <div className="card" onClick={toggleModal}>
-            <p>Add Property</p>
-          </div>
-
-          {/* Render cards */}
-          {cards.map((card, index) => (
-            <div key={card.id || `card-${index}`} className="card">
-              {/* Edit Button */}
-              <button
-                className="edit-button"
-                onClick={() => handleEdit(card.id)}
-              >
-                ✏️
-              </button>
-
-              {/* Delete Button */}
-              <button
-                className="delete-button"
-                onClick={() => handleDelete(card.id)}
-              >
-                ❌
-              </button>
-              {card.photo_url && (
-                <img
-                  src={card.photo_url}
-                  alt="Property"
-                  className="property-image"
-                />
-              )}
-              <div className="card-details">
-                <p>
-                  <strong>Location:</strong> {card.location}
-                </p>
-                <p>
-                  <strong>Bedrooms:</strong> {card.bedrooms}
-                </p>
-                <p>
-                  <strong>Age:</strong> {card.age}
-                </p>
-              </div>
+        {loading ? (
+          <div className="loading">Loading properties...</div>
+        ) : (
+          <div className="grid">
+            {/* Button card to add new information */}
+            <div className="card" onClick={toggleModal}>
+              <p>Add Property</p>
             </div>
-          ))}
-        </div>
+
+            {/* Render cards */}
+            {cards.length > 0 ? (
+              cards.map((card, index) => (
+                <div key={card.id || `card-${index}`} className="card">
+                  {/* Edit Button */}
+                  <button
+                    className="edit-button"
+                    onClick={() => handleEdit(card.id)}
+                  >
+                    ✏️
+                  </button>
+
+                  {/* Delete Button */}
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDelete(card.id)}
+                  >
+                    ❌
+                  </button>
+                  {card.photo_url && (
+                    <img
+                      src={card.photo_url}
+                      alt="Property"
+                      className="property-image"
+                    />
+                  )}
+                  <div className="card-details">
+                    <p>
+                      <strong>Location:</strong> {card.location}
+                    </p>
+                    <p>
+                      <strong>Bedrooms:</strong> {card.bedrooms}
+                    </p>
+                    <p>
+                      <strong>Age:</strong> {card.age}
+                    </p>
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div>No properties found.</div>
+            )}
+          </div>
+        )}
 
         {/* Modal for adding new card */}
         {isModalOpen && (

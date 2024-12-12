@@ -294,7 +294,7 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
 });
 
 // MySQL
-app.get("/api/properties/", async (req, res) => {
+app.get("/api/properties", async (req, res) => {
   // const { userId } = req.params; // Get user ID from the URL
   const { user_id } = req.query;
   console.log("Received request to fetch properties for userId:", user_id);
