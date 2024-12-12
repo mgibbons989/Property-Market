@@ -331,6 +331,15 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
     tax_records,
   } = req.body;
 
+  const parsedBedrooms = parseInt(bedrooms, 10) || 0;
+  const parsedGarden =
+    garden === "1" || garden === 1 || garden === true ? 1 : 0;
+  const parsedParking =
+    parking === "1" || parking === 1 || parking === true ? 1 : 0;
+  const parsedProximityFacilities = parseInt(proximity_facilities, 10) || 0;
+  const parsedProximityMainRoads = parseInt(proximity_main_roads, 10) || 0;
+  const parsedTaxRecords = parseFloat(tax_records) || 0.0;
+
   console.log("Request body data and types:");
   console.log(`location (${typeof location}):`, location);
   console.log(`age (${typeof age}):`, age);
