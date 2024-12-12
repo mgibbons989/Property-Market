@@ -24,7 +24,7 @@ app.use(bodyParser.json());
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 // Serve static files from the Vite build output
-app.use(express.static(path.join(__dirname, "../dist")));
+// app.use(express.static(path.join(__dirname, "../dist")));
 
 // Load env
 dotenv.config();
@@ -375,11 +375,11 @@ app.delete("/api/properties/:id", async (req, res) => {
   }
 });
 
-app.get("*", (req, res) => {
-  console.log("Wildcard route triggered for:", req.path);
-  console.log("Serving file from:", path.join(__dirname, "../dist", "index.html"));
-  res.sendFile(path.join(__dirname, "../dist", "index.html"));
-});
+// app.get("*", (req, res) => {
+//   console.log("Wildcard route triggered for:", req.path);
+//   console.log("Serving file from:", path.join(__dirname, "../dist", "index.html"));
+//   res.sendFile(path.join(__dirname, "../dist", "index.html"));
+// });
 
 // Serve static files (e.g., uploaded photos)
 app.use("/uploads", express.static("uploads"));
