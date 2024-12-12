@@ -126,12 +126,6 @@ const initTables = async () => {
 
 initTables();
 
-app.get("*", (req, res) => {
-  console.log("wild card");
-  
-  res.sendFile(path.join(__dirname, "../dist", "index.html"));
-});
-
 app.get("/", (req, res) => {
   console.log("Getting /");
   res.sendFile(path.join(__dirname, "../dist", "index.html"));
@@ -372,6 +366,12 @@ app.delete("/api/properties/:id", async (req, res) => {
     console.error("Error deleting property:", error.message);
     res.status(500).json({ message: "Internal server error." });
   }
+});
+
+app.get("*", (req, res) => {
+  console.log("wild card");
+  
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
 });
 
 // Serve static files (e.g., uploaded photos)
