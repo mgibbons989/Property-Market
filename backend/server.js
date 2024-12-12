@@ -17,6 +17,10 @@ const allowedOrigins = [
   "https://loving-friendship-production.up.railway.app", // Optional, backend URL for testing
 ];
 
+// Define __dirname
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(
   cors({
     origin: (origin, callback) => {
@@ -29,13 +33,13 @@ app.use(
     },
     methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
     credentials: true, // Allow cookies and authentication headers
-  })
+  }),
+  "/uploads",
+  express.static(path.join(__dirname, "uploads")),
+  bodyParser.json()
 );
 // app.use(cors());
-app.use(bodyParser.json());
-// Define __dirname
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+// app.use(bodyParser.json());
 // Serve static files from the Vite build output
 // app.use(express.static(path.join(__dirname, "../dist")));
 
@@ -465,9 +469,6 @@ app.delete("/api/properties/:id", async (req, res) => {
 //   console.log("Serving file from:", path.join(__dirname, "../dist", "index.html"));
 //   res.sendFile(path.join(__dirname, "../dist", "index.html"));
 // });
-
-// Serve static files (e.g., uploaded photos)
-app.use("/uploads", express.static("uploads"));
 
 console.log("Initializing server...");
 // console.log("Environment Variables", process.env);

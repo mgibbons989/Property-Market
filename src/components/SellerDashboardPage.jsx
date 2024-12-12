@@ -71,6 +71,7 @@ function DashboardPage() {
         console.log(`Fetched properties: ${response.data}`);
         setCards(response.data);
       } catch (error) {
+        setLoading(false);
         console.error(
           `Error fetching properties: ${error.response?.data || error.message}`
         );
