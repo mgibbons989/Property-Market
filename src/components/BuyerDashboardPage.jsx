@@ -5,7 +5,11 @@ function BuyerDashboardPage() {
   return (
     <>
       <Header />
-      <h1>Buyer Dashboard</h1>
+      <div className="dashboard">
+        <h1>
+          {user.first_name}'s Buyer Dashboard
+        </h1>
+      </div>
       <Footer />
     </>
   );

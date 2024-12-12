@@ -5,7 +5,11 @@ function AdminDashboardPage() {
   return (
     <>
       <Header />
-      <h1>Admin Dashboard</h1>
+      <div className="dashboard">
+        <h1>
+          {user.first_name}'s Admin Dashboard
+        </h1>
+      </div>
       <Footer />
     </>
   );

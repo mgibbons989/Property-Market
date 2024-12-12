@@ -18,6 +18,7 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
@@ -46,9 +47,11 @@ button {
   cursor: pointer;
   transition: border-color 0.25s;
 }
+
 button:hover {
   border-color: #646cff;
 }
+
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -59,15 +62,17 @@ button:focus-visible {
     color: #213547;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
+
   button {
     background-color: #f9f9f9;
   }
 }
 
-.header {
+/* .header {
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -76,14 +81,14 @@ button:focus-visible {
   position: fixed;
   top: 0;
   left: 0;
-}
+} */
 
-.footer {
+/* .footer {
   width: 100%;
   position: fixed;
   bottom: 0;
   left: 0;
-}
+} */
 
 .modal-overlay {
   position: fixed;
@@ -114,7 +119,7 @@ button:focus-visible {
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  padding: 20px;
+  padding: 10px 25px;
 }
 
 .grid {
@@ -141,19 +146,54 @@ button:focus-visible {
   cursor: pointer;
   background-color: #f9f9f9;
   color: #1a1a1a;
+
+  transition: transform 0.3s ease-in-out;
+
 }
+
+.card:hover {
+  transform: scale(1.03)
+}
+
+.add-card {
+  transition: color 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
+
+.add-card h2 {
+  padding-top: 10px;
+}
+
+.add-card img {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  height: 90px;
+}
+
+/* Add Button Card */
+.add-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+  background-color: #e8f5e9;
+  border-color: #00796b;
+  color: #00796b;
+  font-weight: bold;
+}
+
 
 /* Button Styling */
 .edit-button,
 .delete-button {
   position: absolute;
-  width: 30px;
-  height: 30px;
-  border-radius: 50%; /* Make the button circular */
+  width: 50px;
+  height: 50px;
+  border-radius: 100%;
+  /* Make the button circular */
   border: 2px solid orange;
-  background-color: #00796b; /* Green for edit */
+  background-color: #00796b;
+  /* Green for edit */
   color: white;
-  font-size: 14px;
+  font-size: 1rem;
   cursor: pointer;
   display: flex;
   justify-content: center;
@@ -164,22 +204,28 @@ button:focus-visible {
 
 /* Top Left: Edit Button */
 .edit-button {
-  top: -10px;
-  left: -10px;
-  background-color: #3492da; /* Green for editing */
+  top: -15px;
+  left: -15px;
+  background-color: #3492da;
+  /* Green for editing */
 }
+
 .edit-button:hover {
-  background-color: #388e3c; /* Darker green on hover */
+  background-color: #388e3c;
+  /* Darker green on hover */
 }
 
 /* Top Right: Delete Button */
 .delete-button {
-  top: -10px;
-  right: -10px;
-  background-color: #28201f; /* Red for deleting */
+  top: -15px;
+  right: -15px;
+  background-color: #28201f;
+  /* Red for deleting */
 }
+
 .delete-button:hover {
-  background-color: #d32f2f; /* Darker red on hover */
+  background-color: #ac2020;
+  /* Darker red on hover */
 }
 
 /* Text inside the card */
@@ -191,42 +237,38 @@ button:focus-visible {
   /* gap: 2px; */
   width: 100%;
 }
-.card-details p {
+
+/* .card-details p {
   margin: 0;
   font-size: 14px;
   color: #333;
+} */
+.card-details li {
+  list-style: none;
+  padding-bottom: 10px;
+  ;
 }
 
 /* Image in the Card */
 .property-image {
-  max-width: 100%; /* Scale image to fit card width */
-  height: auto; /* Maintain aspect ratio */
+  max-width: 100%;
+  /* Scale image to fit card width */
+  height: auto;
+  /* Maintain aspect ratio */
   border-radius: 8px;
-  margin-bottom: 10px; /* Add spacing between image and text */
+  margin-bottom: 10px;
+  /* Add spacing between image and text */
 }
 
 /* Ensure text doesn't overflow the card */
 .card p {
   overflow: hidden;
   text-overflow: ellipsis;
-  white-space: nowrap; /* Optional: Keep text on one line */
+  white-space: nowrap;
+  /* Optional: Keep text on one line */
   width: 100%;
 }
 
-.card:hover {
-  transform: scale(1.05);
-  box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
-  background-color: #e8f5e9;
-  border-color: #00796b;
-  color: #00796b;
-}
-
-/* Add Button Card */
-.add-card {
-  background-color: #e0f7fa;
-  color: #00796b;
-  font-weight: bold;
-}
 
 /* Modal Overlay */
 /* .modal-overlay {
@@ -315,7 +357,8 @@ label {
   margin-right: 10px;
 }
 
-input, select {
+input,
+select {
   flex: 2;
   padding: 5px;
   border: 1px solid #ccc;

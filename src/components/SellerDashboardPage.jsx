@@ -6,6 +6,9 @@ import Footer from "./Footer";
 import Modal from "./Modal";
 import axios from "axios";
 
+import "../dashboard.css";
+import plus from '../components/images/plus.png';
+
 import BuyerDashboardPage from "./BuyerDashboardPage";
 import AdminDashboardPage from "./AdminDashboardPage";
 
@@ -183,12 +186,13 @@ function DashboardPage() {
       <Header />
       <div className="dashboard">
         <h1>
-          Welcome to your dashboard {user.first_name} {user.last_name}!
+          {user.first_name}'s Seller Dashboard
         </h1>
         <div className="grid">
           {/* Button card to add new information */}
-          <div className="card" onClick={toggleModal}>
+          <div className="card add-card" onClick={toggleModal}>
             <p>Add Property</p>
+            <img src={plus} alt="plus icon" />
           </div>
 
           {/* Render cards */}
@@ -224,7 +228,7 @@ function DashboardPage() {
                   <strong>Bedrooms:</strong> {card.bedrooms}
                 </p>
                 <p>
-                  <strong>Age:</strong> {card.age}
+                  <strong>Age:</strong> {card.age} year(s) old
                 </p>
               </div>
             </div>

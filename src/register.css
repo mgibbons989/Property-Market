@@ -1,0 +1,32 @@
+.form label {
+    text-align: left;
+}
+
+.center {
+    text-align: center;
+}
+
+.center h2 {
+    color: var(--primary-color);
+}
+
+.form button[type="submit"] {
+    width: 100%;
+    margin-top: 30px;
+    padding: 12px;
+
+    font-size: 1rem;
+    font-weight: 600;
+
+    color: var(--secondary-color);
+    background-color: var(--primary-color);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.form-card button[type="submit"]:hover {
+    background-color: var(--accent-color);
+    /* color: var(--primary-color); */
+}
