@@ -350,7 +350,7 @@ app.delete("/api/properties/:id", async (req, res) => {
 // Serve static files (e.g., uploaded photos)
 app.use("/uploads", express.static("uploads"));
 
-const PORT = process.env.SQL_PORT || 3360;
+const PORT = process.env.SQL_PORT || 3306;
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
