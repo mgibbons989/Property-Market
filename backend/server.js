@@ -260,7 +260,7 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
 
   try {
     const query = `
-      INSERT INTO properties 
+      INSERT INTO Properties 
       (user_id, location, age, floor_plan, bedrooms, additional_facilities, garden, parking, proximity_facilities, proximity_main_roads, tax_records, photo_url)
       VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     `;
@@ -296,7 +296,7 @@ app.get("/api/properties/:userId", async (req, res) => {
   try {
     const query = `
       SELECT id, location, age, floor_plan, bedrooms, additional_facilities, garden, parking, proximity_facilities, proximity_main_roads, tax_records, photo_url
-      FROM properties
+      FROM Properties
       WHERE user_id = ?;
     `;
     const [rows] = await pool.query(query, [userId]);
@@ -335,7 +335,7 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
 
   try {
     const query = `
-      UPDATE properties 
+      UPDATE Properties 
       SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, additional_facilities = ?, garden = ?, parking = ?, proximity_facilities = ?, proximity_main_roads = ?, tax_records = ?, photo_url = ?
       WHERE id = ?;
     `;
@@ -374,7 +374,7 @@ app.delete("/api/properties/:id", async (req, res) => {
 
   try {
     // Delete the property with the specified ID
-    const query = "DELETE FROM properties WHERE id = ?";
+    const query = "DELETE FROM Properties WHERE id = ?";
     const [result] = await pool.query(query, [id]);
 
     if (result.affectedRows === 0) {
