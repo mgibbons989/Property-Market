@@ -119,7 +119,7 @@ function DashboardPage() {
     try {
       if (editingCard) {
         // Edit property
-        const response = await axios.get(`${BASE_URL}/api/properties`, {
+        const response = await axios.put(`${BASE_URL}/api/properties`, {
           params: { id: editingCard.id },
           headers: { "Content-Type": "multipart/form-data" },
         });

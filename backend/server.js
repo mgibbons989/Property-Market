@@ -351,6 +351,8 @@ app.get("/api/properties", async (req, res) => {
 // EDIT API
 // MySQL
 app.put("/api/properties/", upload.single("photo"), async (req, res) => {
+  console.log("Saving property edit");
+  
   const { id } = req.params;
   const {
     location,
@@ -395,7 +397,7 @@ app.put("/api/properties/", upload.single("photo"), async (req, res) => {
   );
   console.log(`tax_records (${typeof parsedTaxRecords}):`, parsedTaxRecords);
 
-  const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
+  const photoPath = req.file ? `${BASE_URL}/uploads/${req.file.filename}` : null;
 
   try {
     let query, values;
