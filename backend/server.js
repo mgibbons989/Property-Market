@@ -118,20 +118,19 @@ const initTables = async () => {
 
 initTables();
 
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../dist", "index.html"));
+});
+
 app.get("/", (req, res) => {
+  console.log("Getting /");
+
   res.send("Backend is running!");
-  // try {
-  //   const result = await pool.query("SELECT NOW()");
-  //   res.json({ time: result[0][0] });
-  // } catch (error) {
-  //   console.error(error);
-  //   res.status(500).send("Server error");
-  // }
 });
 
 // Login API
 // MySQL
-app.post("/", async (req, res) => {
+app.post("/api/login", async (req, res) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
