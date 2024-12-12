@@ -1,9 +1,9 @@
 function Footer() {
   return (
-    <p className="footer">
-      &copy; {new Date().getFullYear()} Property Narket James Han, Madison Gibbons, Rayhaan
+    <footer>
+      &copy; {new Date().getFullYear()} Property Market James Han, Madison Gibbons, Rayhaan
       Mohamed
-    </p>
+    </footer>
   );
 }
 
