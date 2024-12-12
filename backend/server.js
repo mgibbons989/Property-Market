@@ -14,7 +14,7 @@ const app = express();
 const BASE_URL = "https://loving-friendship-production.up.railway.app"
 const allowedOrigins = [
   "https://james-j-han.github.io", // Your GitHub Pages URL
-  `${BASE_URL}`, // Optional, backend URL for testing
+  "https://loving-friendship-production.up.railway.app", // Optional, backend URL for testing
 ];
 
 app.use(
@@ -258,6 +258,8 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
   } = req.body;
 
   const photoPath = req.file ? `${BASE_URL}/uploads/${req.file.filename}` : null; // Save file path if uploaded
+  console.log(`photo path: ${photoPath}`);
+  
 
   try {
     const query = `
@@ -365,11 +367,20 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
   const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
+    // Update photo only if a new photo is uploaded
     const query = `
       UPDATE Properties 
-      SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, additional_facilities = ?, garden = ?, parking = ?, proximity_facilities = ?, proximity_main_roads = ?, tax_records = ?, photo_url = ?
+      SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, 
+          additional_facilities = ?, garden = ?, parking = ?, 
+          proximity_facilities = ?, proximity_main_roads = ?, 
+          tax_records = ?, photo_url = IFNULL(?, photo_url)
       WHERE id = ?;
     `;
+    // const query = `
+    //   UPDATE Properties 
+    //   SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, additional_facilities = ?, garden = ?, parking = ?, proximity_facilities = ?, proximity_main_roads = ?, tax_records = ?, photo_url = ?
+    //   WHERE id = ?;
+    // `;
     const values = [
       location,
       age,

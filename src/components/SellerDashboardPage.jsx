@@ -41,6 +41,7 @@ function DashboardPage() {
     photo: null, // Initial value for the file input
   });
   const [editingCard, setEditingCard] = useState(null); // For editing
+  const [trigger, setTrigger] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
@@ -65,7 +66,7 @@ function DashboardPage() {
     if (user) {
       fetchProperties();
     }
-  }, [user]);
+  }, [user, trigger]);
 
   const handleSave = async () => {
     const formData = new FormData();
@@ -107,9 +108,14 @@ function DashboardPage() {
         );
         if (response.status === 200) {
           // Update the card in the UI
+          // setCards(
+          //   cards.map((card) =>
+          //     card.id === editingCard.id ? { ...card, ...newCardData } : card
+          //   )
+          // );
           setCards(
             cards.map((card) =>
-              card.id === editingCard.id ? { ...card, ...newCardData } : card
+              card.id === editingCard.id ? { ...card, ...response.data } : card
             )
           );
           setEditingCard(null); // Clear editing state
@@ -126,7 +132,8 @@ function DashboardPage() {
           }
         );
         if (response.status === 201) {
-          setCards([...cards, { ...newCardData, id: response.data.id }]); // Add new card to UI
+          setTrigger((prev) => !prev);
+          // setCards([...cards, { ...newCardData, id: response.data.id }]); // Add new card to UI
         }
       }
 
