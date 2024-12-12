@@ -52,6 +52,7 @@ function DashboardPage() {
         const response = await axios.get(
           `${BASE_URL}/api/properties/${user.id}`
         );
+        console.log("Fetched properties:", response.data);
         setCards(response.data); // Update state with the fetched properties
       } catch (error) {
         console.error(
