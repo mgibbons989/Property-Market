@@ -11,14 +11,6 @@ function Header() {
   };
 
   return (
-    // <header className="header">
-    //   <h1>Property Market</h1>
-    //   {user && <h2>{user.type} Dashboard</h2>}
-    //   <div style={style}>
-    //     <AboutButton />
-    //     {user && <LogoutButton />}
-    //   </div>
-    // </header>
     <header>
       <div className="logo">
         <h1>Property Market</h1>

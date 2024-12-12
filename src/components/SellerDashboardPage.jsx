@@ -6,7 +6,6 @@ import Footer from "./Footer";
 import Modal from "./Modal";
 import axios from "axios";
 
-import "../dashboard.css";
 import plus from '../components/images/plus.png';
 
 import BuyerDashboardPage from "./BuyerDashboardPage";

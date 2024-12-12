@@ -122,6 +122,10 @@ button:focus-visible {
   padding: 10px 25px;
 }
 
+.dashboard h1 {
+  font-size: 2rem;
+}
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
