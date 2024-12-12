@@ -296,6 +296,7 @@ app.post("/api/properties", upload.single("photo"), async (req, res) => {
 // MySQL
 app.get("/api/properties/:userId", async (req, res) => {
   const { userId } = req.params; // Get user ID from the URL
+  console.log("Received request to fetch properties for userId:", userId);
 
   try {
     const query = `
@@ -303,14 +304,19 @@ app.get("/api/properties/:userId", async (req, res) => {
       FROM Properties
       WHERE user_id = ?;
     `;
+    console.log("Executing query:", query);
+    console.log("Query parameters:", [userId]);
+
     const [rows] = await pool.query(query, [userId]);
 
     if (rows.length === 0) {
+      console.log("No properties found for userId:", userId);
       return res
         .status(404)
         .json({ message: "No properties found for this user." });
     }
 
+    console.log("Properties fetched successfully:", rows);
     res.status(200).json(rows); // Return the list of properties
   } catch (error) {
     console.error("Error fetching properties:", error.message);
