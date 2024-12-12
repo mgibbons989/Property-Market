@@ -14,7 +14,7 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Load env
-dotenv.config();
+dotenv.config({ path: "./backend/.env" });
 
 const pool = mysql
   .createPool({
