@@ -143,7 +143,9 @@ const initTables = async () => {
   // await createAdminUser();
 };
 
-initTables();
+initTables()
+  .then(() => console.log("Tables initialized successfully."))
+  .catch((error) => console.log("Error initializing tables: ", error));
 
 // app.get("/", (req, res) => {
 //   console.log("Getting /");
