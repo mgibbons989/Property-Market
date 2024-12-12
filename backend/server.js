@@ -434,6 +434,24 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
   }
 });
 
+app.delete("/api/properties/:id", async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const query = "DELETE FROM Properties WHERE id = ?";
+    const [result] = await pool.query(query, [id]);
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ message: "Property not found." });
+    }
+
+    res.status(200).json({ message: "Property deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting property:", error.message);
+    res.status(500).json({ message: "Internal server error." });
+  }
+});
+
 // app.get("*", (req, res) => {
 //   console.log("Wildcard route triggered for:", req.path);
 //   console.log("Serving file from:", path.join(__dirname, "../dist", "index.html"));
