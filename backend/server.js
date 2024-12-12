@@ -344,22 +344,22 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
   console.log(`location (${typeof location}):`, location);
   console.log(`age (${typeof age}):`, age);
   console.log(`floor_plan (${typeof floor_plan}):`, floor_plan);
-  console.log(`bedrooms (${typeof bedrooms}):`, bedrooms);
+  console.log(`bedrooms (${typeof parsedBedrooms}):`, parsedBedrooms);
   console.log(
     `additional_facilities (${typeof additional_facilities}):`,
     additional_facilities
   );
-  console.log(`garden (${typeof garden}):`, garden);
-  console.log(`parking (${typeof parking}):`, parking);
+  console.log(`garden (${typeof parsedGarden}):`, parsedGarden);
+  console.log(`parking (${typeof parsedParking}):`, parsedParking);
   console.log(
-    `proximity_facilities (${typeof proximity_facilities}):`,
-    proximity_facilities
+    `proximity_facilities (${typeof parsedProximityFacilities}):`,
+    parsedProximityFacilities
   );
   console.log(
-    `proximity_main_roads (${typeof proximity_main_roads}):`,
-    proximity_main_roads
+    `proximity_main_roads (${typeof parsedProximityMainRoads}):`,
+    parsedProximityMainRoads
   );
-  console.log(`tax_records (${typeof tax_records}):`, tax_records);
+  console.log(`tax_records (${typeof parsedTaxRecords}):`, parsedTaxRecords);
 
   const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
 
@@ -373,13 +373,13 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
       location,
       age,
       floor_plan,
-      bedrooms,
+      parsedBedrooms,
       additional_facilities,
-      garden,
-      parking,
-      proximity_facilities,
-      proximity_main_roads,
-      tax_records,
+      parsedGarden,
+      parsedParking,
+      parsedProximityFacilities,
+      parsedProximityMainRoads,
+      parsedTaxRecords,
       photoPath,
       id,
     ];
