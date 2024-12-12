@@ -31,13 +31,16 @@ app.use(
         callback(new Error("Not allowed by CORS"));
       }
     },
-    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed methods
+    methods: ["GET", "POST", "PUT", "DELETE"], // Allowed HTTP methods
     credentials: true, // Allow cookies and authentication headers
-  }),
-  "/uploads",
-  express.static(path.join(__dirname, "uploads")),
-  bodyParser.json()
+  })
 );
+
+// Static files middleware for serving images
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
+// JSON parsing middleware
+app.use(bodyParser.json());
 // app.use(cors());
 // app.use(bodyParser.json());
 // Serve static files from the Vite build output
