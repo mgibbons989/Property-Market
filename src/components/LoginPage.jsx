@@ -19,7 +19,7 @@ function Login() {
   // const user = localStorage.getItem("user");
   console.log(user);
 
-  const BASE_URL = "https://property-market-production.up.railway.app";
+  const BASE_URL = "https://loving-friendship-production.up.railway.app";
 
   if (user) {
     return <Navigate to="/dashboard" replace />;

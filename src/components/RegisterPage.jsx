@@ -13,7 +13,7 @@ function Register() {
   const [type, setType] = useState("seller");
   const [error, setError] = useState("");
   const navigate = useNavigate();
-  const BASE_URL = "https://property-market-production.up.railway.app";
+  const BASE_URL = "https://loving-friendship-production.up.railway.app";
 
   const handleRegister = async (e) => {
     e.preventDefault();

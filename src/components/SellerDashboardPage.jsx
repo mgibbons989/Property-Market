@@ -11,7 +11,7 @@ import AdminDashboardPage from "./AdminDashboardPage";
 
 function DashboardPage() {
   const { user } = useUser();
-  const BASE_URL = "https://property-market-production.up.railway.app";
+  const BASE_URL = "https://loving-friendship-production.up.railway.app";
 
   if (!user) {
     return <Navigate to="/" replace />;

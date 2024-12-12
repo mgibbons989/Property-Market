@@ -11,7 +11,14 @@ import path from "path";
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: "https://property-market-production.up.railway.app",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true, // Allow cookies and authentication
+  })
+);
+// app.use(cors());
 app.use(bodyParser.json());
 // Define __dirname
 const __filename = fileURLToPath(import.meta.url);
