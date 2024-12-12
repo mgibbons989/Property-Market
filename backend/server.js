@@ -27,7 +27,7 @@ const pool = mysql
     user: process.env.MYSQLUSER,
     password: process.env.MYSQLPASSWORD,
     database: process.env.MYSQLDATABASE,
-    port: process.env.SQL_PORT
+    port: process.env.MYSQLPORT || 3306
   })
   .promise();
 
@@ -370,8 +370,7 @@ app.delete("/api/properties/:id", async (req, res) => {
 app.use("/uploads", express.static("uploads"));
 
 console.log("Initializing server...");
-console.log("Environment Variables", process.env);
-
+// console.log("Environment Variables", process.env);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, "0.0.0.0", () => {
