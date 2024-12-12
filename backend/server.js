@@ -11,9 +11,10 @@ import path from "path";
 
 const app = express();
 
+const BASE_URL = "https://loving-friendship-production.up.railway.app"
 const allowedOrigins = [
   "https://james-j-han.github.io", // Your GitHub Pages URL
-  "https://loving-friendship-production.up.railway.app", // Optional, backend URL for testing
+  `${BASE_URL}`, // Optional, backend URL for testing
 ];
 
 app.use(
