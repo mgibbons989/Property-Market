@@ -139,6 +139,7 @@ button:focus-visible {
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  text-align: center;
   height: 320px;
   width: 240px;
   border: 1px solid #ddd;
@@ -250,7 +251,7 @@ button:focus-visible {
 .card-details li {
   list-style: none;
   padding-bottom: 10px;
-  ;
+
 }
 
 /* Image in the Card */
@@ -328,6 +329,7 @@ button:focus-visible {
 .form-container {
   display: flex;
   gap: 20px;
+  justify-content: space-around;
 }
 
 .label-input-col {
@@ -367,4 +369,27 @@ select {
   padding: 5px;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+
+
+.addImage label {
+  flex: 0;
+  font-weight: bold;
+  padding-top: 15px;
+  justify-content: center;
+  align-items: center;
+}
+
+.imgInput {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 85%
+}
+
+.imgInput input {
+  /* flex: 1; */
+  height: 70%;
 }
