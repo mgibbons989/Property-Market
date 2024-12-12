@@ -15,6 +15,7 @@ const BASE_URL = "https://loving-friendship-production.up.railway.app";
 const allowedOrigins = [
   "http://localhost:3000",
   "http://127.0.0.1:3000",
+  "http://localhost:5173",
   "https://james-j-han.github.io", // Your GitHub Pages URL
   "https://loving-friendship-production.up.railway.app", // Optional, backend URL for testing
 ];

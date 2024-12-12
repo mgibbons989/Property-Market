@@ -6,6 +6,8 @@ import Footer from "./Footer";
 import Modal from "./Modal";
 import axios from "axios";
 
+import plus from '../components/images/plus.png';
+
 import BuyerDashboardPage from "./BuyerDashboardPage";
 import AdminDashboardPage from "./AdminDashboardPage";
 
@@ -71,7 +73,6 @@ function DashboardPage() {
         console.log(`Fetched properties: ${response.data}`);
         setCards(response.data);
       } catch (error) {
-        setLoading(false);
         console.error(
           `Error fetching properties: ${error.response?.data || error.message}`
         );
@@ -83,11 +84,11 @@ function DashboardPage() {
     if (user) {
       fetchProperties();
     }
-  }, [user]);
+  }, [loading, user]);
 
-  if (loading) {
-    return <div>Loading properties...</div>;
-  }
+  // if (loading) {
+  //   return <div>Loading properties...</div>;
+  // }
 
   const handleSave = async () => {
     const formData = new FormData();
@@ -114,42 +115,33 @@ function DashboardPage() {
     if (newCardData.photo) {
       formData.append("photo", newCardData.photo);
     }
-
+  
     try {
       if (editingCard) {
-        // Edit mode: Update existing property
+        // Edit property
         const response = await axios.put(
           `${BASE_URL}/api/properties/${editingCard.id}`,
           formData,
           {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
+            headers: { "Content-Type": "multipart/form-data" },
           }
         );
         if (response.status === 200) {
-          // Update the card in the UI
-          // fetchProperties();
-          setLoading(true);
-          setEditingCard(null); // Clear editing state
+          console.log("Property updated successfully.");
         }
       } else {
-        // Add mode: Add a new property
-        const response = await axios.post(
-          `${BASE_URL}/api/properties`,
-          formData,
-          {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          }
-        );
+        // Add new property
+        const response = await axios.post(`${BASE_URL}/api/properties`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
         if (response.status === 201) {
-          setLoading(true);
-          // fetchProperties();
+          console.log("Property added successfully.");
         }
       }
-
+      setLoading(true); // Trigger re-fetch of properties
+    } catch (error) {
+      console.error("Error saving property:", error.response?.data || error.message);
+    } finally {
       setNewCardData({
         location: "",
         age: "",
@@ -164,11 +156,7 @@ function DashboardPage() {
         photo: null,
       });
       setIsModalOpen(false); // Close modal
-    } catch (error) {
-      console.error(
-        "Error saving property:",
-        error.response?.data || error.message
-      );
+      setEditingCard(null); // Clear editing state
     }
   };
 
@@ -203,15 +191,16 @@ function DashboardPage() {
       <Header />
       <div className="dashboard">
         <h1>
-          Welcome to your dashboard {user.first_name} {user.last_name}!
+          {user.first_name}'s Seller Dashboard
         </h1>
         {loading ? (
           <div className="loading">Loading properties...</div>
         ) : (
           <div className="grid">
             {/* Button card to add new information */}
-            <div className="card" onClick={toggleModal}>
+            <div className="card add-card" onClick={toggleModal}>
               <p>Add Property</p>
+              <img src={plus} alt="plus icon" />
             </div>
 
             {/* Render cards */}

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useUser } from "./UserContext";
+import "../homepage.css";
 
 import Header from "./Header";
 import Footer from "./Footer";
@@ -73,35 +74,59 @@ function Login() {
   return (
     <>
       <Header />
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
+      <main className="main-content">
+        <div className="center" id="center-container">
+          <section className="about-section">
+            <div className="text-content">
+              <h1>Welcome to Property Market</h1>
+              <p>
+                We are dedicated to simplifying real estate transactions by
+                connecting property sellers and buyers. Our platform makes the
+                process smooth and efficient, giving you the tools you need to
+                succeed in the market.
+              </p>
+            </div>
+          </section>
+
+          <section className="buttons">
+            <Link to="/register">
+              <button className="acct-btn signup">
+                Create an Account <span className="arrow">&rarr;</span>
+              </button>
+            </Link>
+          </section>
         </div>
-        <div>
-          <label htmlFor="password">Password:</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-      <p>
-        Don't have an account? <Link to="/register">Register here</Link>
-      </p>
+        <section className="form-section">
+          <div className="form-card">
+            <h2>Login</h2>
+            <form onSubmit={handleLogin}>
+              <div className="form-group">
+                <label htmlFor="email">Email:</label>
+                <input
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="password">Password:</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  required
+                />
+              </div>
+              <button type="submit">Login</button>
+            </form>
+          </div>
+        </section>
+      </main>
       <Footer />
     </>
   );
