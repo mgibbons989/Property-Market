@@ -368,62 +368,68 @@ app.put("/api/properties/:id", upload.single("photo"), async (req, res) => {
   const photoPath = req.file ? `/uploads/${req.file.filename}` : null;
 
   try {
-    // Update photo only if a new photo is uploaded
-    // const query = `
-    //   UPDATE Properties 
-    //   SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, 
-    //       additional_facilities = ?, garden = ?, parking = ?, 
-    //       proximity_facilities = ?, proximity_main_roads = ?, 
-    //       tax_records = ?, photo_url = IFNULL(?, photo_url)
-    //   WHERE id = ?;
-    // `;
-    const query = `
-      UPDATE Properties
-      SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, additional_facilities = ?, garden = ?, parking = ?, proximity_facilities = ?, proximity_main_roads = ?, tax_records = ?, photo_url = ?
-      WHERE id = ?;
-    `;
-    const values = [
-      location,
-      age,
-      floor_plan,
-      parsedBedrooms,
-      additional_facilities,
-      parsedGarden,
-      parsedParking,
-      parsedProximityFacilities,
-      parsedProximityMainRoads,
-      parsedTaxRecords,
-      photoPath,
-      id,
-    ];
+    let query, values;
+
+    if (photoPath) {
+      // If a new photo is uploaded, update the photo_url
+      query = `
+        UPDATE Properties 
+        SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, 
+            additional_facilities = ?, garden = ?, parking = ?, 
+            proximity_facilities = ?, proximity_main_roads = ?, 
+            tax_records = ?, photo_url = ?
+        WHERE id = ?;
+      `;
+      values = [
+        location,
+        age,
+        floor_plan,
+        parsedBedrooms,
+        additional_facilities,
+        parsedGarden,
+        parsedParking,
+        parsedProximityFacilities,
+        parsedProximityMainRoads,
+        parsedTaxRecords,
+        photoPath,
+        id,
+      ];
+    } else {
+      // If no new photo is uploaded, retain the existing photo_url
+      query = `
+        UPDATE Properties 
+        SET location = ?, age = ?, floor_plan = ?, bedrooms = ?, 
+            additional_facilities = ?, garden = ?, parking = ?, 
+            proximity_facilities = ?, proximity_main_roads = ?, 
+            tax_records = ?
+        WHERE id = ?;
+      `;
+      values = [
+        location,
+        age,
+        floor_plan,
+        parsedBedrooms,
+        additional_facilities,
+        parsedGarden,
+        parsedParking,
+        parsedProximityFacilities,
+        parsedProximityMainRoads,
+        parsedTaxRecords,
+        id,
+      ];
+    }
 
     await pool.query(query, values);
 
-    res.status(200).json({ message: "Property updated successfully." });
+    // Fetch the updated property to return
+    const [updatedProperty] = await pool.query(
+      "SELECT * FROM Properties WHERE id = ?",
+      [id]
+    );
+
+    res.status(200).json(updatedProperty[0]);
   } catch (error) {
     console.error("Error updating property:", error.message);
-    res.status(500).json({ message: "Internal server error." });
-  }
-});
-
-// DELETE API to delete a property by ID
-// MySQL
-app.delete("/api/properties/:id", async (req, res) => {
-  const { id } = req.params; // Get the property ID from the URL
-
-  try {
-    // Delete the property with the specified ID
-    const query = "DELETE FROM Properties WHERE id = ?";
-    const [result] = await pool.query(query, [id]);
-
-    if (result.affectedRows === 0) {
-      // If no rows were affected, the property ID does not exist
-      return res.status(404).json({ message: "Property not found." });
-    }
-
-    res.status(200).json({ message: "Property deleted successfully." });
-  } catch (error) {
-    console.error("Error deleting property:", error.message);
     res.status(500).json({ message: "Internal server error." });
   }
 });
