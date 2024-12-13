@@ -115,7 +115,7 @@ function DashboardPage() {
     if (newCardData.photo) {
       formData.append("photo", newCardData.photo);
     }
-  
+
     try {
       if (editingCard) {
         // Edit property
@@ -191,7 +191,7 @@ function DashboardPage() {
       <Header />
       <div className="dashboard">
         <h1>
-          {user.first_name}'s Seller Dashboard
+          {user.first_name.charAt(0).toUpperCase() + user.first_name.slice(1)}'s Seller Dashboard
         </h1>
         {loading ? (
           <div className="loading">Loading properties...</div>
@@ -199,7 +199,7 @@ function DashboardPage() {
           <div className="grid">
             {/* Button card to add new information */}
             <div className="card add-card" onClick={toggleModal}>
-              <p>Add Property</p>
+              <h2>Add Property</h2>
               <img src={plus} alt="plus icon" />
             </div>
 
@@ -452,19 +452,21 @@ function DashboardPage() {
 
               {/* Photo Upload */}
               <div className="image-col">
-                <div className="card">
+                <div className="card addImage">
                   <label htmlFor="photo">Add Photo</label>
-                  <input
-                    type="file"
-                    id="photo"
-                    accept="image/*"
-                    onChange={(e) =>
-                      setNewCardData({
-                        ...newCardData,
-                        photo: e.target.files[0],
-                      })
-                    }
-                  />
+                  <div className="imgInput">
+                    <input
+                      type="file"
+                      id="photo"
+                      accept="image/*"
+                      onChange={(e) =>
+                        setNewCardData({
+                          ...newCardData,
+                          photo: e.target.files[0],
+                        })
+                      }
+                    />
+                  </div>
                 </div>
               </div>
             </div>

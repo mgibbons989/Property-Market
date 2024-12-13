@@ -5,7 +5,7 @@
 
   color-scheme: light dark;
   color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  background-color: white;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
@@ -237,23 +237,27 @@ button:focus-visible {
 .card-details {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
+  justify-content: center;
+  align-items: center;
   width: 100%;
+
+  flex: 1;
   /* background-color: lightblue; */
 }
 
-/* .card-details p {
+.card-details p {
   margin: 0;
-  font-size: 14px;
-  color: #333;
-} */
+  padding-bottom: 15px;
+  /* font-size: 14px; */
+  /* color: #333; */
+}
 
+/* 
 .card-details li {
   list-style: none;
   padding-bottom: 4px;
   margin: 0;
-}
+} */
 
 /* Image in the Card */
 .property-image {
@@ -374,7 +378,6 @@ select {
 }
 
 
-
 .addImage label {
   flex: 0;
   font-weight: bold;
@@ -392,6 +395,6 @@ select {
 }
 
 .imgInput input {
-  /* flex: 1; */
+  flex: 1;
   height: 70%;
 }
